@@ -95,7 +95,7 @@ public class Link {
             "Giải trí"
     };
 
-    public String getLink(int webId, int channelId)
+    public static String getLink(int webId, int channelId)
     {
         if(webId == 1)
         {
@@ -115,7 +115,7 @@ public class Link {
         }
     }
 
-    public String getTitle(int webId, int channelId)
+    public static String getTitle(int webId, int channelId)
     {
         if(webId == 1)
         {

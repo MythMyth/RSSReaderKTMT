@@ -1,5 +1,7 @@
 package ktmt.rssreader.Data;
 
+import android.util.Log;
+
 import java.io.InputStream;
 
 import javax.xml.parsers.SAXParser;
@@ -11,14 +13,14 @@ import javax.xml.parsers.SAXParserFactory;
 
 public class RSS {
     int webId, channelId;
-    public void getRSS(int webId, int channelId)
+    public void getRSS(final int webId, final int channelId)
     {
         this.channelId = channelId;
         this.webId = webId;
         new Thread(new Runnable() {
             @Override
             public void run() {
-                String link = "";
+                String link = Link.getLink(RSS.this.webId, RSS.this.channelId);
                 InputStream stream = RSSReceiver.getRssStream(link);
                 try {
                     SAXParserFactory fac = SAXParserFactory.newInstance();
@@ -29,7 +31,7 @@ public class RSS {
                 }
                 catch (Exception e)
                 {
-
+                    Log.e("", "" + e);
                 }
             }
         }).start();
