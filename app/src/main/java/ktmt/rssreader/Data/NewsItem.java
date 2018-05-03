@@ -12,4 +12,8 @@ public class NewsItem {
     public String imageLink;
     public String des;
     public Date time;
+
+    public NewsItem() {
+    }
+
 }

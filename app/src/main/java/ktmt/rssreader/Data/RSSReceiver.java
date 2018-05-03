@@ -20,7 +20,7 @@ public class RSSReceiver {
         }
         catch (Exception e)
         {
-
+            e.printStackTrace();
         }
         return inputStream;
     }

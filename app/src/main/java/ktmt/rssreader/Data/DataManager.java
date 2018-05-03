@@ -1,22 +1,35 @@
 package ktmt.rssreader.Data;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.Date;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by Myth on 3/27/2018.
  */
 
 public class DataManager {
+
+    public static ListNewsItem listHistorys = new ListNewsItem();
+    public static ListNewsItem listLoves = new ListNewsItem();
+    public static ListNewsItem listBookmarks = new ListNewsItem();
+    public static final String HISTORY_LIST = "historyList";
+    public static final String LOVE_LIST = "loveList";
+    public static final String BOOKMARK_LIST = "bookmarkList";
     public static SQLiteDatabase db;
     public static void dbInit(Context c)
     {
-        db = c.openOrCreateDatabase("RSSDB", Context.MODE_PRIVATE, null);
+        db = c.openOrCreateDatabase("RSSDB", MODE_PRIVATE, null);
         db.execSQL("CREATE TABLE IF NOT EXISTS DB(id INTEGER PRIMARY KEY AUTOINCREMENT," +
                 " title NVARCHAR, " +
                 "content NVARCHAR, " +
@@ -62,5 +75,63 @@ public class DataManager {
         }
         while(c.moveToNext());
         return list;
+    }
+
+    public static void addItem(String typeData, Activity activity, NewsItem newsItem){
+        SharedPreferences  mPrefs = activity.getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor prefsEditor = mPrefs.edit();
+        String json = "";
+        switch (typeData){
+            case LOVE_LIST:
+                json = saveList(newsItem, listLoves);
+                break;
+            case BOOKMARK_LIST:
+                json = saveList(newsItem,listBookmarks);
+                break;
+            case HISTORY_LIST:
+                json = saveList(newsItem,listHistorys);
+                break;
+        }
+        prefsEditor.putString(typeData, json);
+        prefsEditor.apply();
+    }
+
+    private static String saveList(NewsItem newsItem, ListNewsItem listNewsItem) {
+        if(newsItem != null) {
+            listNewsItem.addItem(newsItem);
+        }
+        return (new Gson()).toJson(listNewsItem);
+    }
+
+    public static void deleteData(String typeData, Activity activity, int position){
+        switch (typeData){
+            case LOVE_LIST:
+                listLoves.remove(position);
+                break;
+            case BOOKMARK_LIST:
+                listBookmarks.remove(position);
+                break;
+            case HISTORY_LIST:
+                listHistorys.remove(position);
+                break;
+        }
+        addItem(typeData,activity,null);
+    }
+
+    public static void getData(String typeData, Activity activity){
+        SharedPreferences  mPrefs = activity.getPreferences(MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = mPrefs.getString(typeData,"");
+        switch (typeData){
+            case LOVE_LIST:
+                listLoves = gson.fromJson(json, ListNewsItem.class);
+                break;
+            case BOOKMARK_LIST:
+                listBookmarks = gson.fromJson(json, ListNewsItem.class);
+                break;
+            case HISTORY_LIST:
+                listHistorys = gson.fromJson(json, ListNewsItem.class);
+                break;
+        }
     }
 }

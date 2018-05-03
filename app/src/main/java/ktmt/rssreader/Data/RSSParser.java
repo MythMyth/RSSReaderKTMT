@@ -15,7 +15,7 @@ public class RSSParser extends DefaultHandler {
     String tabName;
     boolean tabStart;
     boolean startParse;
-    ArrayList<NewsItem> newsList = new ArrayList<>();
+    public ArrayList<NewsItem> newsList = new ArrayList<>();
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         tabName = qName;

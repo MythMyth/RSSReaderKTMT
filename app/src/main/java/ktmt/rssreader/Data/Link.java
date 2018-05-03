@@ -1,11 +1,18 @@
 package ktmt.rssreader.Data;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Created by Myth on 3/28/2018.
  */
 
 public class Link {
-    public static String[] VNEXPRESS= new String[]{
+
+    public final static int ID_VNXPRESS = 2;
+    public final static int ID_24H = 1;
+    private static String[] VNEXPRESS= new String[]{
             "https://vnexpress.net/rss/tin-moi-nhat.rss",
             "https://vnexpress.net/rss/thoi-su.rss",
             "https://vnexpress.net/rss/the-gioi.rss",
@@ -25,7 +32,7 @@ public class Link {
             "https://vnexpress.net/rss/cuoi.rss"
     };
 
-    public static String[] VNEXPRESS_TITLE = new String[]{
+    private static String[] VNEXPRESS_TITLE = new String[]{
             "Tin mới nhất",
             "Thời sự",
             "Thế giới",
@@ -45,7 +52,7 @@ public class Link {
             "Cười"
     };
 
-    public static String[] _24H = new String[]{
+    private static String[] _24H = new String[]{
             "http://24h.com.vn/upload/rss/trangchu24h.rss",
             "http://24h.com.vn/upload/rss/tintuctrongngay.rss",
             "http://24h.com.vn/upload/rss/bongda.rss",
@@ -70,7 +77,7 @@ public class Link {
             "http://24h.com.vn/upload/rss/giaitri.rss"
     };
 
-    public static String[] _24H_TITLE = new String[]{
+    private static String[] _24H_TITLE = new String[]{
             "Trang chủ",
             "Tin tức trong ngày",
             "Bóng đá",
@@ -95,9 +102,9 @@ public class Link {
             "Giải trí"
     };
 
-    public String getLink(int webId, int channelId)
+    public static String getLink(int webId, int channelId)
     {
-        if(webId == 1)
+        if(webId == ID_24H)
         {
             if(channelId >= _24H.length)
             {
@@ -117,7 +124,7 @@ public class Link {
 
     public String getTitle(int webId, int channelId)
     {
-        if(webId == 1)
+        if(webId == ID_24H)
         {
             if(channelId >= _24H_TITLE.length)
             {
@@ -133,5 +140,15 @@ public class Link {
             }
             return VNEXPRESS_TITLE[channelId];
         }
+    }
+
+    public static List<String> getTitles(int webId){
+        switch (webId){
+            case ID_24H:
+                return Arrays.asList(_24H_TITLE);
+            case ID_VNXPRESS:
+                return Arrays.asList(VNEXPRESS_TITLE);
+        }
+        return null;
     }
 }
