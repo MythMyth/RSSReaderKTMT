@@ -57,14 +57,18 @@ public class RSSParser extends DefaultHandler {
         else if((tabName.equalsIgnoreCase("description")||tabName.equalsIgnoreCase("img"))&&parseDes)
         {
             String descript = new String(ch, start, ch.length);
-            if(descript.contains("<a href")) {
+            try {
+                if (descript.contains("<a href")) {
 
-                newsList.get(newsList.size() - 1).des = descript.substring(descript.indexOf("</br>") + 5);
-                newsList.get(newsList.size() - 1).imageLink = descript.substring(descript.indexOf("src=")+5, descript.indexOf("></a>")-2);
+                    newsList.get(newsList.size() - 1).des = descript.substring(descript.indexOf("</br>") + 5);
+                    newsList.get(newsList.size() - 1).imageLink = descript.substring(descript.indexOf("src=") + 5, descript.indexOf("></a>") - 2);
+                } else {
+                    newsList.get(newsList.size() - 1).des = descript;
+                }
             }
-            else
+            catch(Exception e)
             {
-                newsList.get(newsList.size()-1).des = descript;
+                
             }
             parseDes = false;
         }
