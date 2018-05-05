@@ -1,6 +1,11 @@
 package ktmt.rssreader.Data;
 
+import org.xml.sax.InputSource;
+
+import java.io.BufferedReader;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -10,18 +15,29 @@ import java.net.URL;
 
 public class RSSReceiver {
 
-    public static InputStream getRssStream(String link)
+    public static InputSource getRssStream(String link)
     {
         InputStream inputStream = null;
+        InputSource is = new InputSource();
         try {
             URL url = new URL(link);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
             inputStream = conn.getInputStream();
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            StringBuilder out = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                out.append(line);
+            }
+            is.setCharacterStream(new StringReader(out.toString()));
         }
         catch (Exception e)
         {
 
         }
-        return inputStream;
+        is.setEncoding("UTF-8");
+        return is;
     }
 }

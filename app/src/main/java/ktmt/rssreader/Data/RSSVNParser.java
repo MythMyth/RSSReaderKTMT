@@ -8,13 +8,15 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * Created by Myth on 3/27/2018.
  */
 
-public class RSSParser extends DefaultHandler {
+public class RSSVNParser extends DefaultHandler {
     String tabName;
+    String descript;
     boolean startParse;
     boolean parseTitle, parseDes, parseDate, parseLink;
     ArrayList<NewsItem> newsList = new ArrayList<>();
@@ -25,6 +27,7 @@ public class RSSParser extends DefaultHandler {
         {
             startParse = true;
             newsList.add(new NewsItem());
+            descript = "";
             parseDate = true;
             parseDes = true;
             parseLink = true;
@@ -51,31 +54,25 @@ public class RSSParser extends DefaultHandler {
         if(tabName.equalsIgnoreCase("title")&&parseTitle)
         {
             String title = new String(ch, start, length);
-            newsList.get(newsList.size()-1).title = title;
-            parseTitle = false;
+            newsList.get(newsList.size()-1).title = newsList.get(newsList.size()-1).title + title;
         }
-        else if((tabName.equalsIgnoreCase("description")||tabName.equalsIgnoreCase("img"))&&parseDes)
+        else if(tabName.equalsIgnoreCase("description"))
         {
-            String descript = new String(ch, start, ch.length);
+            descript = descript + new String(ch, start, length);
             try {
-                if (descript.contains("<a href")) {
-
-                    newsList.get(newsList.size() - 1).des = descript.substring(descript.indexOf("</br>") + 5);
-                    newsList.get(newsList.size() - 1).imageLink = descript.substring(descript.indexOf("src=") + 5, descript.indexOf("></a>") - 2);
-                } else {
-                    newsList.get(newsList.size() - 1).des = descript;
-                }
+                newsList.get(newsList.size() - 1).des = descript.substring(descript.indexOf("</br>") + 5);
+                newsList.get(newsList.size() - 1).imageLink = descript.substring(descript.indexOf("src=") + 5, descript.indexOf("></a>") - 2);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                
+                Log.e("Error: ", e + "");
+                Log.e("Error: ", descript);
             }
-            parseDes = false;
         }
         else if(tabName.equalsIgnoreCase("pubdate")&&parseDate)
         {
             String dateString = new String(ch, start, length);
-            SimpleDateFormat format = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z");
+            SimpleDateFormat format = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z", Locale.ENGLISH);
             try {
                 newsList.get(newsList.size()-1).time = format.parse(dateString);
             }

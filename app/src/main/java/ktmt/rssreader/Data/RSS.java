@@ -2,7 +2,11 @@ package ktmt.rssreader.Data;
 
 import android.util.Log;
 
+import org.xml.sax.InputSource;
+
+import java.io.BufferedReader;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -21,13 +25,22 @@ public class RSS {
             @Override
             public void run() {
                 String link = Link.getLink(RSS.this.webId, RSS.this.channelId);
-                InputStream stream = RSSReceiver.getRssStream(link);
+                InputSource stream = RSSReceiver.getRssStream(link);
                 try {
                     SAXParserFactory fac = SAXParserFactory.newInstance();
                     SAXParser parser = fac.newSAXParser();
-                    RSSParser rssParser = new RSSParser();
-                    parser.parse(stream, rssParser);
-                    DataManager.UpdateNews(RSS.this.webId, RSS.this.channelId, rssParser.newsList);
+                    if(RSS.this.webId == 0) {
+                        RSSVNParser rssParser = new RSSVNParser();
+                        parser.parse(stream, rssParser);
+
+                        DataManager.UpdateNews(RSS.this.webId, RSS.this.channelId, rssParser.newsList);
+                    }
+                    else
+                    {
+                        RSS24Parser rssParser = new RSS24Parser();
+                        parser.parse(stream, rssParser);
+                        DataManager.UpdateNews(RSS.this.webId, RSS.this.channelId, rssParser.newsList);
+                    }
                 }
                 catch (Exception e)
                 {
