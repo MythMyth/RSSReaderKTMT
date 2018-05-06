@@ -16,8 +16,9 @@ import java.util.ArrayList;
 public class RSSParser extends DefaultHandler {
     String tabName;
     boolean startParse;
+    public ArrayList<NewsItem> newsList = new ArrayList<>();
     boolean parseTitle, parseDes, parseDate, parseLink;
-    ArrayList<NewsItem> newsList = new ArrayList<>();
+
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         tabName = qName;
@@ -32,7 +33,7 @@ public class RSSParser extends DefaultHandler {
         }
         else if(qName.equalsIgnoreCase("img")&&startParse)
         {
-            newsList.get(newsList.size()-1).imageLink = attributes.getValue(attributes.getIndex("src"));
+            newsList.get(newsList.size()-1).setImageLink(attributes.getValue(attributes.getIndex("src")));
         }
     }
 
@@ -60,7 +61,14 @@ public class RSSParser extends DefaultHandler {
             if(descript.contains("<a href")) {
 
                 newsList.get(newsList.size() - 1).des = descript.substring(descript.indexOf("</br>") + 5);
-                newsList.get(newsList.size() - 1).imageLink = descript.substring(descript.indexOf("src=")+5, descript.indexOf("></a>")-2);
+                String a;
+                if(newsList.size()<5) {
+                    a = descript.substring(descript.indexOf("src=") + 5, descript.indexOf("></a>") - 2);
+                    newsList.get(newsList.size() - 1).setImageLink(descript.substring(descript.indexOf("src=") + 5, descript.indexOf("></a>") - 2));
+                } else {
+                    a = descript.substring(descript.indexOf("data-original=") + 15, descript.indexOf("></a>") - 2);
+                    newsList.get(newsList.size() - 1).setImageLink(descript.substring(descript.indexOf("data-original=") + 15, descript.indexOf("></a>") - 2));
+                }
             }
             else
             {

@@ -9,7 +9,19 @@ import java.util.Date;
 public class NewsItem {
     public String title;
     public String link;
-    public String imageLink;
+    private String imageLink;
     public String des;
     public Date time;
+    public int webId;
+
+    public NewsItem() {
+    }
+
+    public String getImageLink() {
+        return imageLink;
+    }
+
+    public void setImageLink(String imageLink) {
+        this.imageLink = imageLink;
+    }
 }

@@ -1,11 +1,18 @@
 package ktmt.rssreader.Data;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Created by Myth on 3/28/2018.
  */
 
 public class Link {
-    public static String[] VNEXPRESS= new String[]{
+
+    public final static int ID_VNXPRESS = 2;
+    public final static int ID_24H = 1;
+    private static String[] VNEXPRESS= new String[]{
             "https://vnexpress.net/rss/tin-moi-nhat.rss",
             "https://vnexpress.net/rss/thoi-su.rss",
             "https://vnexpress.net/rss/the-gioi.rss",
@@ -25,7 +32,7 @@ public class Link {
             "https://vnexpress.net/rss/cuoi.rss"
     };
 
-    public static String[] VNEXPRESS_TITLE = new String[]{
+    private static String[] VNEXPRESS_TITLE = new String[]{
             "Tin mới nhất",
             "Thời sự",
             "Thế giới",
@@ -45,32 +52,32 @@ public class Link {
             "Cười"
     };
 
-    public static String[] _24H = new String[]{
-            "http://24h.com.vn/upload/rss/trangchu24h.rss",
-            "http://24h.com.vn/upload/rss/tintuctrongngay.rss",
-            "http://24h.com.vn/upload/rss/bongda.rss",
-            "http://24h.com.vn/upload/rss/anninhhinhsu.rss",
-            "http://24h.com.vn/upload/rss/thoitrang.rss",
-            "http://24h.com.vn/upload/rss/thoitranghitech.rss",
-            "http://24h.com.vn/upload/rss/taichinhbatdongsan.rss",
-            "http://24h.com.vn/upload/rss/amthuc.rss",
-            "http://24h.com.vn/upload/rss/lamdep.rss",
-            "http://24h.com.vn/upload/rss/phim.rss",
-            "http://24h.com.vn/upload/rss/giaoducduhoc.rss",
-            "http://24h.com.vn/upload/rss/bantrecuocsong.rss",
-            "http://24h.com.vn/upload/rss/canhacmtv.rss",
-            "http://24h.com.vn/upload/rss/thethao.rss",
-            "http://24h.com.vn/upload/rss/congnghethongtin.rss",
-            "http://24h.com.vn/upload/rss/otoxemay.rss",
-            "http://24h.com.vn/upload/rss/thitruongtieudung.rss",
-            "http://24h.com.vn/upload/rss/dulich.rss",
-            "http://24h.com.vn/upload/rss/suckhoedoisong.rss",
-            "http://24h.com.vn/upload/rss/cuoi24h.rss",
-            "http://24h.com.vn/upload/rss/tintucquocte.rss",
-            "http://24h.com.vn/upload/rss/giaitri.rss"
+    private static String[] _24H = new String[]{
+            "https://www.24h.com.vn/upload/rss/trangchu24h.rss",
+            "https://www.24h.com.vn/upload/rss/tintuctrongngay.rss",
+            "https://www.24h.com.vn/upload/rss/bongda.rss",
+            "https://www.24h.com.vn/upload/rss/anninhhinhsu.rss",
+            "https://www.24h.com.vn/upload/rss/thoitrang.rss",
+            "https://www.24h.com.vn/upload/rss/thoitranghitech.rss",
+            "https://www.24h.com.vn/upload/rss/taichinhbatdongsan.rss",
+            "https://www.24h.com.vn/upload/rss/amthuc.rss",
+            "https://www.24h.com.vn/upload/rss/lamdep.rss",
+            "https://www.24h.com.vn/upload/rss/phim.rss",
+            "https://www.24h.com.vn/upload/rss/giaoducduhoc.rss",
+            "https://www.24h.com.vn/upload/rss/bantrecuocsong.rss",
+            "https://www.24h.com.vn/upload/rss/canhacmtv.rss",
+            "https://www.24h.com.vn/upload/rss/thethao.rss",
+            "https://www.24h.com.vn/upload/rss/congnghethongtin.rss",
+            "https://www.24h.com.vn/upload/rss/otoxemay.rss",
+            "https://www.24h.com.vn/upload/rss/thitruongtieudung.rss",
+            "https://www.24h.com.vn/upload/rss/dulich.rss",
+            "https://www.24h.com.vn/upload/rss/suckhoedoisong.rss",
+            "https://www.24h.com.vn/upload/rss/cuoi24h.rss",
+            "https://www.24h.com.vn/upload/rss/tintucquocte.rss",
+            "https://www.24h.com.vn/upload/rss/giaitri.rss"
     };
 
-    public static String[] _24H_TITLE = new String[]{
+    private static String[] _24H_TITLE = new String[]{
             "Trang chủ",
             "Tin tức trong ngày",
             "Bóng đá",
@@ -97,7 +104,7 @@ public class Link {
 
     public static String getLink(int webId, int channelId)
     {
-        if(webId == 1)
+        if(webId == ID_24H)
         {
             if(channelId >= _24H.length)
             {
@@ -117,7 +124,7 @@ public class Link {
 
     public static String getTitle(int webId, int channelId)
     {
-        if(webId == 1)
+        if(webId == ID_24H)
         {
             if(channelId >= _24H_TITLE.length)
             {
@@ -133,5 +140,15 @@ public class Link {
             }
             return VNEXPRESS_TITLE[channelId];
         }
+    }
+
+    public static List<String> getTitles(int webId){
+        switch (webId){
+            case ID_24H:
+                return Arrays.asList(_24H_TITLE);
+            case ID_VNXPRESS:
+                return Arrays.asList(VNEXPRESS_TITLE);
+        }
+        return null;
     }
 }
