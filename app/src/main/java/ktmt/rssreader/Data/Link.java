@@ -53,28 +53,28 @@ public class Link {
     };
 
     private static String[] _24H = new String[]{
-            "http://24h.com.vn/upload/rss/trangchu24h.rss",
-            "http://24h.com.vn/upload/rss/tintuctrongngay.rss",
-            "http://24h.com.vn/upload/rss/bongda.rss",
-            "http://24h.com.vn/upload/rss/anninhhinhsu.rss",
-            "http://24h.com.vn/upload/rss/thoitrang.rss",
-            "http://24h.com.vn/upload/rss/thoitranghitech.rss",
-            "http://24h.com.vn/upload/rss/taichinhbatdongsan.rss",
-            "http://24h.com.vn/upload/rss/amthuc.rss",
-            "http://24h.com.vn/upload/rss/lamdep.rss",
-            "http://24h.com.vn/upload/rss/phim.rss",
-            "http://24h.com.vn/upload/rss/giaoducduhoc.rss",
-            "http://24h.com.vn/upload/rss/bantrecuocsong.rss",
-            "http://24h.com.vn/upload/rss/canhacmtv.rss",
-            "http://24h.com.vn/upload/rss/thethao.rss",
-            "http://24h.com.vn/upload/rss/congnghethongtin.rss",
-            "http://24h.com.vn/upload/rss/otoxemay.rss",
-            "http://24h.com.vn/upload/rss/thitruongtieudung.rss",
-            "http://24h.com.vn/upload/rss/dulich.rss",
-            "http://24h.com.vn/upload/rss/suckhoedoisong.rss",
-            "http://24h.com.vn/upload/rss/cuoi24h.rss",
-            "http://24h.com.vn/upload/rss/tintucquocte.rss",
-            "http://24h.com.vn/upload/rss/giaitri.rss"
+            "https://www.24h.com.vn/upload/rss/trangchu24h.rss",
+            "https://www.24h.com.vn/upload/rss/tintuctrongngay.rss",
+            "https://www.24h.com.vn/upload/rss/bongda.rss",
+            "https://www.24h.com.vn/upload/rss/anninhhinhsu.rss",
+            "https://www.24h.com.vn/upload/rss/thoitrang.rss",
+            "https://www.24h.com.vn/upload/rss/thoitranghitech.rss",
+            "https://www.24h.com.vn/upload/rss/taichinhbatdongsan.rss",
+            "https://www.24h.com.vn/upload/rss/amthuc.rss",
+            "https://www.24h.com.vn/upload/rss/lamdep.rss",
+            "https://www.24h.com.vn/upload/rss/phim.rss",
+            "https://www.24h.com.vn/upload/rss/giaoducduhoc.rss",
+            "https://www.24h.com.vn/upload/rss/bantrecuocsong.rss",
+            "https://www.24h.com.vn/upload/rss/canhacmtv.rss",
+            "https://www.24h.com.vn/upload/rss/thethao.rss",
+            "https://www.24h.com.vn/upload/rss/congnghethongtin.rss",
+            "https://www.24h.com.vn/upload/rss/otoxemay.rss",
+            "https://www.24h.com.vn/upload/rss/thitruongtieudung.rss",
+            "https://www.24h.com.vn/upload/rss/dulich.rss",
+            "https://www.24h.com.vn/upload/rss/suckhoedoisong.rss",
+            "https://www.24h.com.vn/upload/rss/cuoi24h.rss",
+            "https://www.24h.com.vn/upload/rss/tintucquocte.rss",
+            "https://www.24h.com.vn/upload/rss/giaitri.rss"
     };
 
     private static String[] _24H_TITLE = new String[]{
@@ -122,7 +122,7 @@ public class Link {
         }
     }
 
-    public String getTitle(int webId, int channelId)
+    public static String getTitle(int webId, int channelId)
     {
         if(webId == ID_24H)
         {

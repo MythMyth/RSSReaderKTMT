@@ -17,14 +17,14 @@ import ktmt.rssreader.Asysntask.GetRssListAsyn;
 
 public class RSS {
     int webId, channelId;
-    public void getRSS(int webId, int channelId)
-    {
+
+    public void getRSS(final int webId, final int channelId) {
         this.channelId = channelId;
         this.webId = webId;
         new Thread(new Runnable() {
             @Override
             public void run() {
-                String link = "";
+                String link = Link.getLink(RSS.this.webId, RSS.this.channelId);
                 InputStream stream = RSSReceiver.getRssStream(link);
                 try {
                     SAXParserFactory fac = SAXParserFactory.newInstance();
@@ -32,17 +32,16 @@ public class RSS {
                     RSSParser rssParser = new RSSParser();
                     parser.parse(stream, rssParser);
                     DataManager.UpdateNews(RSS.this.webId, RSS.this.channelId, rssParser.newsList);
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
                     e.printStackTrace();
+                    Log.e("", "" + e);
                 }
             }
         }).start();
     }
 
-    public static List<NewsItem> getRSSList(final int webId, final int channelId){
-        String link = Link.getLink(webId,channelId);
+    public static List<NewsItem> getRSSList(final int webId, final int channelId) {
+        String link = Link.getLink(webId, channelId);
         GetRssListAsyn getRssListAsyn = new GetRssListAsyn();
         try {
             getRssListAsyn.execute(link).get();
@@ -50,6 +49,10 @@ public class RSS {
             e.printStackTrace();
         }
         List<NewsItem> newsItems = getRssListAsyn.getNewsItems();
+        for (NewsItem newsItem : newsItems
+                ) {
+            newsItem.webId = webId;
+        }
         return newsItems;
     }
 }

@@ -5,8 +5,6 @@
     android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <include layout="@layout/header_bar"
-        android:visibility="gone"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,7 +18,7 @@
             android:id="@+id/btVnxpress"
             android:layout_weight="1"
             android:textSize="@dimen/text_size_normal"
-            android:textColor="#ffffff"/>
+            android:textColor="@drawable/state_color_text_for_button"/>
         <Button
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -29,23 +27,10 @@
             android:id="@+id/bt24h"
             android:textSize="@dimen/text_size_normal"
             android:layout_weight="1"
-            android:textColor="#ffffff"/>
+            android:textColor="@drawable/state_color_text_for_button"/>
     </LinearLayout>
-    <android.support.v4.view.ViewPager
-        android:id="@+id/vpgHome"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <android.support.design.widget.TabLayout
-            android:id="@+id/tabNewsPaper"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/actionbar_button_size"
-            app:tabBackground="@color/backgroundActionBar"
-            app:tabGravity="center"
-            app:tabIndicatorColor="@color/bottom_selected"
-            app:tabIndicatorHeight="@dimen/tab_indicator_height"
-            app:tabMode="scrollable"
-            app:tabSelectedTextColor="@color/bottom_selected"
-            app:tabTextAppearance="@style/TabTeaxtAppearance"
-            app:tabTextColor="@color/bottom_unselected" />
-    </android.support.v4.view.ViewPager>
+        android:layout_height="match_parent"
+        android:id="@+id/containerHome"/>
 </LinearLayout>

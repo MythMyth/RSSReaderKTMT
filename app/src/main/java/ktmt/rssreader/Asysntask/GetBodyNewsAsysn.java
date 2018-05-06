@@ -19,8 +19,10 @@ public class GetBodyNewsAsysn extends AsyncTask<String, Void, String> {
 
     private WebView webView;
 
-    public GetBodyNewsAsysn(WebView webView) {
+    public GetBodyNewsAsysn(WebView webView)
+    {
         this.webView = webView;
+
     }
 
     @Override
@@ -35,8 +37,10 @@ public class GetBodyNewsAsysn extends AsyncTask<String, Void, String> {
                 switch (webId) {
                     case ID_VNXPRESS:
                         data = getBodyVnxpress(document);
+                        break;
                     case ID_24H:
                         data = getBody24h(document);
+                        break;
                 }
             }
         } catch (IOException e) {
@@ -55,7 +59,11 @@ public class GetBodyNewsAsysn extends AsyncTask<String, Void, String> {
     }
 
     private String getBodyVnxpress(Document document) {
-        Elements elements = document.select("article");
+        Elements elements ;
+        elements  = document.select("article");
+        if(elements.size() == 0){
+            elements = document.select("figure.ob-os.ob");
+        }
         String time = document.select("header.clearfix").toString();
         String title = document.select("h1").get(0).toString();
         String description = document.select("h2.description").toString();

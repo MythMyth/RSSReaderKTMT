@@ -11,6 +11,7 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -49,7 +50,7 @@ public class DataManager {
             c.put("content", item.des);
             c.put("time", item.time.getTime());
             c.put("link", item.link);
-            c.put("imageLink", item.imageLink);
+            c.put("imageLink", item.getImageLink());
             db.insert("DB", "", c);
         }
     }
@@ -70,7 +71,7 @@ public class DataManager {
             item.des = c.getString(contentIndex);
             item.link = c.getString(linkIndex);
             item.time = new Date(c.getLong(timeIndex));
-            item.imageLink = c.getString(imageLinkIndex);
+            item.setImageLink(c.getString(imageLinkIndex));
             list.add(item);
         }
         while(c.moveToNext());
@@ -92,12 +93,21 @@ public class DataManager {
                 json = saveList(newsItem,listHistorys);
                 break;
         }
+        if(json.equals("")){
+            return;
+        }
         prefsEditor.putString(typeData, json);
         prefsEditor.apply();
     }
 
     private static String saveList(NewsItem newsItem, ListNewsItem listNewsItem) {
         if(newsItem != null) {
+            for ( NewsItem item: listNewsItem.getNewsItems()
+                 ) {
+                if(item == newsItem){
+                    return "";
+                }
+            }
             listNewsItem.addItem(newsItem);
         }
         return (new Gson()).toJson(listNewsItem);
@@ -118,20 +128,13 @@ public class DataManager {
         addItem(typeData,activity,null);
     }
 
-    public static void getData(String typeData, Activity activity){
+    public static List<NewsItem> getData(String typeData, Activity activity){
         SharedPreferences  mPrefs = activity.getPreferences(MODE_PRIVATE);
         Gson gson = new Gson();
         String json = mPrefs.getString(typeData,"");
-        switch (typeData){
-            case LOVE_LIST:
-                listLoves = gson.fromJson(json, ListNewsItem.class);
-                break;
-            case BOOKMARK_LIST:
-                listBookmarks = gson.fromJson(json, ListNewsItem.class);
-                break;
-            case HISTORY_LIST:
-                listHistorys = gson.fromJson(json, ListNewsItem.class);
-                break;
+        if(json.equals("")){
+            return null;
         }
+        return (gson.fromJson(json, ListNewsItem.class)).getNewsItems();
     }
 }

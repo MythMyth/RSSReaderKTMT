@@ -65,7 +65,7 @@ public class BaseFragment extends Fragment {
 
     public void onBtSearchClick(){
         Log.e("onBtSearchClick: ", "sádads" );
-        ((MainActivity) Objects.requireNonNull(getActivity())).onBtSearchClick();
+//        ((MainActivity) Objects.requireNonNull(getActivity())).onBtSearchClick();
     }
 
     public void onBackPressd(){

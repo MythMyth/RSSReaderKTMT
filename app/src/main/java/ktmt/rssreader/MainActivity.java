@@ -11,15 +11,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ktmt.rssreader.Data.DataManager;
 import ktmt.rssreader.Data.NewsItem;
+import ktmt.rssreader.Data.RSS;
 import ktmt.rssreader.adapters.HomePagerAdapter;
+import ktmt.rssreader.fragments.BaseFragment;
+import ktmt.rssreader.fragments.MainFragment;
 
-public class MainActivity extends AppCompatActivity implements OnTabSelectListener{
-
-    @BindView(R.id.vpgMain)
-    ViewPager viewPager;
-    @BindView(R.id.bottomBar)
-    BottomBar bottomBar;
-    private int currentTab = 2;
+public class MainActivity extends AppCompatActivity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,66 +24,12 @@ public class MainActivity extends AppCompatActivity implements OnTabSelectListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        setupPager();
+        changeFragment(MainFragment.newInstance());
     }
 
-    private void setupBottomBar() {
-        bottomBar.setOnTabSelectListener(this);
+    public void changeFragment(BaseFragment fragment) {
+        getSupportFragmentManager().beginTransaction().replace(R.id.container,fragment,null)
+                .addToBackStack(null).commit();
     }
 
-    private void setupPager() {
-        viewPager.setAdapter(new HomePagerAdapter(getSupportFragmentManager()));
-        viewPager.postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                viewPager.setCurrentItem(currentTab);
-                setupBottomBar();
-            }
-        }, 100);
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                bottomBar.selectTabAtPosition(position);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-    }
-
-
-    @Override
-    public void onTabSelected(int tabId) {
-        switch (tabId){
-            case R.id.tab_search:
-                currentTab = 0;
-                break;
-            case R.id.tab_history:
-                currentTab = 1;
-                break;
-            case R.id.tab_home:
-                currentTab = 2;
-                break;
-            case R.id.tab_love:
-                currentTab = 4;
-                break;
-            case R.id.tab_bookmark:
-                currentTab = 3;
-                break;
-        }
-        viewPager.setCurrentItem(currentTab, false);
-//        updateTitle();
-    }
-
-    public void onBtSearchClick() {
-        viewPager.setCurrentItem(0);
-    }
 }
