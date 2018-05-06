@@ -3,6 +3,10 @@ package ktmt.rssreader;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.TextView;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
@@ -22,6 +26,8 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         DataManager.dbInit(this);
         super.onCreate(savedInstanceState);
+        RSS receive = new RSS();
+        receive.getRSS(0, 0);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         changeFragment(MainFragment.newInstance());
@@ -33,3 +39,6 @@ public class MainActivity extends AppCompatActivity{
     }
 
 }
+
+
+

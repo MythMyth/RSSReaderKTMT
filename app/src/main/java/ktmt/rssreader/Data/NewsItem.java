@@ -15,6 +15,8 @@ public class NewsItem {
     public int webId;
 
     public NewsItem() {
+        title = "";
+        des = "";
     }
 
     public String getImageLink() {
