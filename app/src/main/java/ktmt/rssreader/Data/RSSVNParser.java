@@ -18,8 +18,9 @@ public class RSSVNParser extends DefaultHandler {
     String tabName;
     String descript;
     boolean startParse;
+    public ArrayList<NewsItem> newsList = new ArrayList<>();
     boolean parseTitle, parseDes, parseDate, parseLink;
-    ArrayList<NewsItem> newsList = new ArrayList<>();
+
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         tabName = qName;
@@ -35,7 +36,7 @@ public class RSSVNParser extends DefaultHandler {
         }
         else if(qName.equalsIgnoreCase("img")&&startParse)
         {
-            newsList.get(newsList.size()-1).imageLink = attributes.getValue(attributes.getIndex("src"));
+            newsList.get(newsList.size()-1).setImageLink(attributes.getValue(attributes.getIndex("src")));
         }
     }
 
@@ -61,7 +62,15 @@ public class RSSVNParser extends DefaultHandler {
             descript = descript + new String(ch, start, length);
             try {
                 newsList.get(newsList.size() - 1).des = descript.substring(descript.indexOf("</br>") + 5);
-                newsList.get(newsList.size() - 1).imageLink = descript.substring(descript.indexOf("src=") + 5, descript.indexOf("></a>") - 2);
+                String a;
+                if(newsList.size()<5) {
+                    a = descript.substring(descript.indexOf("src=") + 5, descript.indexOf("></a>") - 2);
+                    newsList.get(newsList.size() - 1).setImageLink(descript.substring(descript.indexOf("src=") + 5, descript.indexOf("></a>") - 2));
+                } else {
+                    a = descript.substring(descript.indexOf("data-original=") + 15, descript.indexOf("></a>") - 2);
+                    newsList.get(newsList.size() - 1).setImageLink(descript.substring(descript.indexOf("data-original=") + 15, descript.indexOf("></a>") - 2));
+                }
+                newsList.get(newsList.size() - 1).setImageLink(descript.substring(descript.indexOf("src=") + 5, descript.indexOf("></a>") - 2));
             }
             catch (Exception e)
             {

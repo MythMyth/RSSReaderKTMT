@@ -1,11 +1,18 @@
 package ktmt.rssreader.Data;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Created by Myth on 3/28/2018.
  */
 
 public class Link {
-    public static String[] VNEXPRESS= new String[]{
+
+    public final static int ID_VNXPRESS = 2;
+    public final static int ID_24H = 1;
+    private static String[] VNEXPRESS= new String[]{
             "https://vnexpress.net/rss/tin-moi-nhat.rss",
             "https://vnexpress.net/rss/thoi-su.rss",
             "https://vnexpress.net/rss/the-gioi.rss",
@@ -25,7 +32,7 @@ public class Link {
             "https://vnexpress.net/rss/cuoi.rss"
     };
 
-    public static String[] VNEXPRESS_TITLE = new String[]{
+    private static String[] VNEXPRESS_TITLE = new String[]{
             "Tin mới nhất",
             "Thời sự",
             "Thế giới",
@@ -45,7 +52,8 @@ public class Link {
             "Cười"
     };
 
-    public static String[] _24h = new String[]{
+
+    private static String[] _24H = new String[]{
             "https://www.24h.com.vn/upload/rss/trangchu24h.rss",
             "https://www.24h.com.vn/upload/rss/tintuctrongngay.rss",
             "https://www.24h.com.vn/upload/rss/bongda.rss",
@@ -65,12 +73,12 @@ public class Link {
             "https://www.24h.com.vn/upload/rss/thitruongtieudung.rss",
             "https://www.24h.com.vn/upload/rss/dulich.rss",
             "https://www.24h.com.vn/upload/rss/suckhoedoisong.rss",
-            "https://www.24h.com.vn/upload/rss/cuoiwww.24h.rss",
+            "https://www.24h.com.vn/upload/rss/cuoi24h.rss",
             "https://www.24h.com.vn/upload/rss/tintucquocte.rss",
             "https://www.24h.com.vn/upload/rss/giaitri.rss"
     };
 
-    public static String[] _24h_TITLE = new String[]{
+    private static String[] _24H_TITLE = new String[]{
             "Trang chủ",
             "Tin tức trong ngày",
             "Bóng đá",
@@ -97,13 +105,13 @@ public class Link {
 
     public static String getLink(int webId, int channelId)
     {
-        if(webId == 1)
+        if(webId == ID_24H)
         {
-            if(channelId >= _24h.length)
+            if(channelId >= _24H.length)
             {
-                return _24h[0];
+                return _24H[0];
             }
-            return _24h[channelId];
+            return _24H[channelId];
         }
         else
         {
@@ -117,13 +125,13 @@ public class Link {
 
     public static String getTitle(int webId, int channelId)
     {
-        if(webId == 1)
+        if(webId == ID_24H)
         {
-            if(channelId >= _24h_TITLE.length)
+            if(channelId >= _24H_TITLE.length)
             {
-                return _24h_TITLE[0];
+                return _24H_TITLE[0];
             }
-            return _24h_TITLE[channelId];
+            return _24H_TITLE[channelId];
         }
         else
         {
@@ -133,5 +141,15 @@ public class Link {
             }
             return VNEXPRESS_TITLE[channelId];
         }
+    }
+
+    public static List<String> getTitles(int webId){
+        switch (webId){
+            case ID_24H:
+                return Arrays.asList(_24H_TITLE);
+            case ID_VNXPRESS:
+                return Arrays.asList(VNEXPRESS_TITLE);
+        }
+        return null;
     }
 }
