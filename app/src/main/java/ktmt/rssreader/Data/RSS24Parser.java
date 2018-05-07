@@ -35,7 +35,7 @@ public class RSS24Parser extends DefaultHandler {
             parseLink = true;
             parseTitle = true;
         } else if (qName.equalsIgnoreCase("img") && startParse) {
-            newsList.get(newsList.size() - 1).imageLink = attributes.getValue(attributes.getIndex("src"));
+            newsList.get(newsList.size() - 1).setImageLink(attributes.getValue(attributes.getIndex("src")));
         }
     }
 

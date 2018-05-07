@@ -42,10 +42,7 @@ public class RSSVNParser extends DefaultHandler {
 
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
-        if(qName.equalsIgnoreCase("description"))
-        {
-            qName="description";
-        }
+
     }
 
     @Override
@@ -62,12 +59,12 @@ public class RSSVNParser extends DefaultHandler {
             descript = descript + new String(ch, start, length);
             try {
                 newsList.get(newsList.size() - 1).des = descript.substring(descript.indexOf("</br>") + 5);
-                String a;
+                //String a;
                 if(newsList.size()<5) {
-                    a = descript.substring(descript.indexOf("src=") + 5, descript.indexOf("></a>") - 2);
+                    //a = descript.substring(descript.indexOf("src=") + 5, descript.indexOf("></a>") - 2);
                     newsList.get(newsList.size() - 1).setImageLink(descript.substring(descript.indexOf("src=") + 5, descript.indexOf("></a>") - 2));
                 } else {
-                    a = descript.substring(descript.indexOf("data-original=") + 15, descript.indexOf("></a>") - 2);
+                    //a = descript.substring(descript.indexOf("data-original=") + 15, descript.indexOf("></a>") - 2);
                     newsList.get(newsList.size() - 1).setImageLink(descript.substring(descript.indexOf("data-original=") + 15, descript.indexOf("></a>") - 2));
                 }
                 newsList.get(newsList.size() - 1).setImageLink(descript.substring(descript.indexOf("src=") + 5, descript.indexOf("></a>") - 2));

@@ -42,9 +42,9 @@ public class DataManager {
     }
 
     public static void UpdateNews(int webId, int channelID, ArrayList<NewsItem> items) {
-        db.delete("DB", "webID = " + webId + "AND channelID = " + channelID, null);
         for (NewsItem item : items)
         {
+            db.delete("DB", "link = " + item.link, null);
             ContentValues c = new ContentValues();
             c.put("title", item.title);
             c.put("content", item.des);
@@ -59,6 +59,8 @@ public class DataManager {
     {
         ArrayList<NewsItem> list = new ArrayList<>();
         Cursor c = db.rawQuery("SELECT * FROM DB WHERE webID = " + webId + " AND channelID = " + channelId +";", null);
+        if(c.getCount()==0)
+            return list;
         c.moveToFirst();
         int titleIndex = c.getColumnIndex("title");
         int contentIndex = c.getColumnIndex("content");
@@ -75,6 +77,36 @@ public class DataManager {
             list.add(item);
         }
         while(c.moveToNext());
+        return list;
+    }
+
+    public static ArrayList<NewsItem> SearchData(int webId, int channelId, String searchString)
+    {
+        ArrayList<NewsItem> list = new ArrayList<>();
+        String mutatedSearchString = searchString.trim().replace(" ", "%");
+        mutatedSearchString = mutatedSearchString.replace("'", "");
+        mutatedSearchString = mutatedSearchString.replace("\"", "");
+        Cursor c = db.rawQuery("SELECT * FROM DB WHERE webID = " + webId + " AND channelID = " + channelId +
+                "AND (title LIKE '" + mutatedSearchString + "' OR content LIKE '" + mutatedSearchString +"');", null);
+        if(c.getCount()==0)
+            return list;
+        c.moveToFirst();
+        int titleIndex = c.getColumnIndex("title");
+        int contentIndex = c.getColumnIndex("content");
+        int timeIndex = c.getColumnIndex("time");
+        int linkIndex = c.getColumnIndex("link");
+        int imageLinkIndex = c.getColumnIndex("imageLink");
+        do {
+            NewsItem item = new NewsItem();
+            item.title = c.getString(titleIndex);
+            item.des = c.getString(contentIndex);
+            item.link = c.getString(linkIndex);
+            item.time = new Date(c.getLong(timeIndex));
+            item.setImageLink(c.getString(imageLinkIndex));
+            list.add(item);
+        }
+        while(c.moveToNext());
+
         return list;
     }
 
