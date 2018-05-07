@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Objects;
 
 import butterknife.BindView;
+import ktmt.rssreader.Data.DataManager;
 import ktmt.rssreader.Data.NewsItem;
 import ktmt.rssreader.Data.RSS;
 import ktmt.rssreader.MainActivity;
@@ -77,5 +78,6 @@ public class ListNewsFragment extends BaseFragment implements ListRssNewsAdapter
     public void onClickItem(int position) {
         Log.e("onClickItem: ","dfdfd" );
         ((MainActivity) Objects.requireNonNull(getActivity())).changeFragment(DetailNewsFragment.newInstance(newsItems.get(position),webId));
+        DataManager.addItem(DataManager.HISTORY_LIST, Objects.requireNonNull(getActivity()), newsItems.get(position));
     }
 }

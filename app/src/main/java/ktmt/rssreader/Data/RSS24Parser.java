@@ -22,7 +22,7 @@ public class RSS24Parser extends DefaultHandler {
     String tabName;
     boolean startParse;
     boolean parseTitle, parseDes, parseDate, parseLink;
-    ArrayList<NewsItem> newsList = new ArrayList<>();
+    private ArrayList<NewsItem> newsList = new ArrayList<>();
 
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
@@ -35,7 +35,7 @@ public class RSS24Parser extends DefaultHandler {
             parseLink = true;
             parseTitle = true;
         } else if (qName.equalsIgnoreCase("img") && startParse) {
-            newsList.get(newsList.size() - 1).imageLink = attributes.getValue(attributes.getIndex("src"));
+            newsList.get(newsList.size() - 1).setImageLink(attributes.getValue(attributes.getIndex("src")));
         }
     }
 
@@ -76,5 +76,9 @@ public class RSS24Parser extends DefaultHandler {
             newsList.get(newsList.size() - 1).link = lnk;
             parseLink = false;
         }
+    }
+
+    public ArrayList<NewsItem> getNewsList() {
+        return newsList;
     }
 }

@@ -77,13 +77,10 @@ public class DetailNewsFragment extends BaseFragment {
         super.onBackPressd();
     }
 
-    @OnClick(R.id.btBookMark)
-    public void onBookMarkButtonClick(){
-        DataManager.addItem(DataManager.BOOKMARK_LIST, Objects.requireNonNull(getActivity()),newsItem);
-    }
-
     @OnClick(R.id.btLove)
     public void onLoveButtonClick(){
-        DataManager.addItem(DataManager.LOVE_LIST, Objects.requireNonNull(getActivity()),newsItem);
+        if(!DataManager.isLoved(newsItem.link)) {
+            DataManager.addItem(DataManager.LOVE_LIST, Objects.requireNonNull(getActivity()), newsItem);
+        }
     }
 }

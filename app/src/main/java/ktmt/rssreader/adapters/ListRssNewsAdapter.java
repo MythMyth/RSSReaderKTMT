@@ -1,5 +1,6 @@
 package ktmt.rssreader.adapters;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -13,9 +14,13 @@ import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.PropertyPermission;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import ktmt.rssreader.Data.DataManager;
 import ktmt.rssreader.Data.NewsItem;
 import ktmt.rssreader.GlideModule.GlideApp;
 import ktmt.rssreader.Helper.Helper;
@@ -73,6 +78,10 @@ public class ListRssNewsAdapter extends RecyclerView.Adapter<ListRssNewsAdapter.
         TextView tvTime;
         @BindView(R.id.tvDescription)
         TextView tvDescription;
+        @BindView(R.id.imvBookmark)
+        ImageView imvBookmark;
+
+        private boolean isBookmarked ;
 
         ChildHolder(View itemView) {
             super(itemView);
@@ -83,7 +92,21 @@ public class ListRssNewsAdapter extends RecyclerView.Adapter<ListRssNewsAdapter.
             tvTitle.setText(newsItems.get(position).title);
             tvTime.setText(Helper.changeDateToString(newsItems.get(position).time));
             tvDescription.setText(newsItems.get(position).des);
+            isBookmarked = DataManager.isBookmarked(newsItems.get(position).link);
+            if(isBookmarked){
+                GlideApp.with(itemView.getContext()).load(R.drawable.ic_bookmark_selected).into(imvBookmark);
+            } else {
+                GlideApp.with(itemView.getContext()).load(R.drawable.ic_bookmark_unselected).into(imvBookmark);
+            }
             GlideApp.with(itemView.getContext()).load(newsItems.get(position).getImageLink()).into(imageView);
+        }
+
+        @OnClick(R.id.imvBookmark)
+        public void onImvBookmarkClick(){
+            if(!isBookmarked) {
+                DataManager.addItem(DataManager.BOOKMARK_LIST, (Activity) Objects.requireNonNull(itemView.getContext()),newsItems.get(getAdapterPosition()));
+                GlideApp.with(itemView.getContext()).load(R.drawable.ic_bookmark_selected).into(imvBookmark);
+            }
         }
     }
 

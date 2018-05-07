@@ -28,8 +28,8 @@ public class DataManager {
     public static final String LOVE_LIST = "loveList";
     public static final String BOOKMARK_LIST = "bookmarkList";
     public static SQLiteDatabase db;
-    public static void dbInit(Context c)
-    {
+
+    public static void dbInit(Context c) {
         db = c.openOrCreateDatabase("RSSDB", MODE_PRIVATE, null);
         db.execSQL("CREATE TABLE IF NOT EXISTS DB(id INTEGER PRIMARY KEY AUTOINCREMENT," +
                 " title NVARCHAR, " +
@@ -43,8 +43,7 @@ public class DataManager {
 
     public static void UpdateNews(int webId, int channelID, ArrayList<NewsItem> items) {
         db.delete("DB", "webID = " + webId + "AND channelID = " + channelID, null);
-        for (NewsItem item : items)
-        {
+        for (NewsItem item : items) {
             ContentValues c = new ContentValues();
             c.put("title", item.title);
             c.put("content", item.des);
@@ -55,10 +54,9 @@ public class DataManager {
         }
     }
 
-    public static ArrayList<NewsItem> GetNewsData(int webId, int channelId)
-    {
+    public static ArrayList<NewsItem> GetNewsData(int webId, int channelId) {
         ArrayList<NewsItem> list = new ArrayList<>();
-        Cursor c = db.rawQuery("SELECT * FROM DB WHERE webID = " + webId + " AND channelID = " + channelId +";", null);
+        Cursor c = db.rawQuery("SELECT * FROM DB WHERE webID = " + webId + " AND channelID = " + channelId + ";", null);
         c.moveToFirst();
         int titleIndex = c.getColumnIndex("title");
         int contentIndex = c.getColumnIndex("content");
@@ -74,26 +72,26 @@ public class DataManager {
             item.setImageLink(c.getString(imageLinkIndex));
             list.add(item);
         }
-        while(c.moveToNext());
+        while (c.moveToNext());
         return list;
     }
 
-    public static void addItem(String typeData, Activity activity, NewsItem newsItem){
-        SharedPreferences  mPrefs = activity.getPreferences(MODE_PRIVATE);
+    public static void addItem(String typeData, Activity activity, NewsItem newsItem) {
+        SharedPreferences mPrefs = activity.getPreferences(MODE_PRIVATE);
         SharedPreferences.Editor prefsEditor = mPrefs.edit();
         String json = "";
-        switch (typeData){
+        switch (typeData) {
             case LOVE_LIST:
                 json = saveList(newsItem, listLoves);
                 break;
             case BOOKMARK_LIST:
-                json = saveList(newsItem,listBookmarks);
+                json = saveList(newsItem, listBookmarks);
                 break;
             case HISTORY_LIST:
-                json = saveList(newsItem,listHistorys);
+                json = saveList(newsItem, listHistorys);
                 break;
         }
-        if(json.equals("")){
+        if (json.equals("")) {
             return;
         }
         prefsEditor.putString(typeData, json);
@@ -101,10 +99,10 @@ public class DataManager {
     }
 
     private static String saveList(NewsItem newsItem, ListNewsItem listNewsItem) {
-        if(newsItem != null) {
-            for ( NewsItem item: listNewsItem.getNewsItems()
-                 ) {
-                if(item == newsItem){
+        if (newsItem != null) {
+            for (NewsItem item : listNewsItem.getNewsItems()
+                    ) {
+                if (item == newsItem) {
                     return "";
                 }
             }
@@ -113,8 +111,8 @@ public class DataManager {
         return (new Gson()).toJson(listNewsItem);
     }
 
-    public static void deleteData(String typeData, Activity activity, int position){
-        switch (typeData){
+    public static void deleteData(String typeData, Activity activity, int position) {
+        switch (typeData) {
             case LOVE_LIST:
                 listLoves.remove(position);
                 break;
@@ -125,16 +123,44 @@ public class DataManager {
                 listHistorys.remove(position);
                 break;
         }
-        addItem(typeData,activity,null);
+        addItem(typeData, activity, null);
     }
 
-    public static List<NewsItem> getData(String typeData, Activity activity){
-        SharedPreferences  mPrefs = activity.getPreferences(MODE_PRIVATE);
+    public static ListNewsItem getData(String typeData, Activity activity) {
+        SharedPreferences mPrefs = activity.getPreferences(MODE_PRIVATE);
         Gson gson = new Gson();
-        String json = mPrefs.getString(typeData,"");
-        if(json.equals("")){
+        String json = mPrefs.getString(typeData, "");
+        if (json.equals("")) {
             return null;
         }
-        return (gson.fromJson(json, ListNewsItem.class)).getNewsItems();
+        return (gson.fromJson(json, ListNewsItem.class));
     }
+
+    public static void getData(Activity activity){
+        listHistorys = getData(HISTORY_LIST, activity);
+        listLoves = getData(LOVE_LIST, activity);
+        listBookmarks = getData(BOOKMARK_LIST, activity);
+    }
+
+    public static boolean isBookmarked(String link) {
+        for (NewsItem item :
+                listBookmarks.getNewsItems()) {
+            if(item.link.equals(link)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isLoved(String link) {
+        for (NewsItem item :
+                listLoves.getNewsItems()) {
+            if(item.link.equals(link)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+
 }

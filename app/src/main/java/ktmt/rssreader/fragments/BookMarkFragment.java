@@ -42,7 +42,7 @@ public class BookMarkFragment extends BaseFragment implements ListRssNewsAdapter
 
     @Override
     void onViewAppear() {
-        newsItems = DataManager.getData(DataManager.BOOKMARK_LIST, Objects.requireNonNull(getActivity()));
+        newsItems = Objects.requireNonNull(DataManager.getData(DataManager.BOOKMARK_LIST, Objects.requireNonNull(getActivity()))).getNewsItems();
         if(newsItems == null){
             return;
         }
@@ -73,5 +73,6 @@ public class BookMarkFragment extends BaseFragment implements ListRssNewsAdapter
     @Override
     public void onClickItem(int position) {
         ((MainActivity) Objects.requireNonNull(getActivity())).changeFragment(DetailNewsFragment.newInstance(newsItems.get(position),newsItems.get(position).webId));
+        DataManager.addItem(DataManager.HISTORY_LIST, Objects.requireNonNull(getActivity()), newsItems.get(position));
     }
 }

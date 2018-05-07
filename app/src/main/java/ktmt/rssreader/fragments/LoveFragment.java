@@ -43,7 +43,7 @@ public class LoveFragment extends BaseFragment implements ListRssNewsAdapter.onC
 
     @Override
     void onViewAppear() {
-        newsItems =DataManager.getData(DataManager.LOVE_LIST, Objects.requireNonNull(getActivity()));
+        newsItems = Objects.requireNonNull(DataManager.getData(DataManager.LOVE_LIST, Objects.requireNonNull(getActivity()))).getNewsItems();
         if(newsItems == null){
             return;
         }
@@ -73,5 +73,6 @@ public class LoveFragment extends BaseFragment implements ListRssNewsAdapter.onC
     @Override
     public void onClickItem(int position) {
         ((MainActivity) Objects.requireNonNull(getActivity())).changeFragment(DetailNewsFragment.newInstance(newsItems.get(position),newsItems.get(position).webId));
+        DataManager.addItem(DataManager.HISTORY_LIST, Objects.requireNonNull(getActivity()), newsItems.get(position));
     }
 }
