@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.Objects;
@@ -14,6 +15,7 @@ import butterknife.OnClick;
 import ktmt.rssreader.Asysntask.GetBodyNewsAsysn;
 import ktmt.rssreader.Data.DataManager;
 import ktmt.rssreader.Data.NewsItem;
+import ktmt.rssreader.GlideModule.GlideApp;
 import ktmt.rssreader.R;
 
 public class DetailNewsFragment extends BaseFragment {
@@ -24,6 +26,10 @@ public class DetailNewsFragment extends BaseFragment {
     TextView tvTitle;
     @BindView(R.id.web_view)
     WebView webView;
+    @BindView(R.id.btLove)
+    ImageView btLove;
+
+
 
     public static DetailNewsFragment newInstance(NewsItem newsItem, int webID){
         Bundle args = new Bundle();
@@ -81,6 +87,8 @@ public class DetailNewsFragment extends BaseFragment {
     public void onLoveButtonClick(){
         if(!DataManager.isLoved(newsItem.link)) {
             DataManager.addItem(DataManager.LOVE_LIST, Objects.requireNonNull(getActivity()), newsItem);
+            GlideApp.with(this).load(R.drawable.ic_love_selected).into(btLove);
         }
     }
+
 }

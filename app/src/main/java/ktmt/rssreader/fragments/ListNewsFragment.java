@@ -45,7 +45,7 @@ public class ListNewsFragment extends BaseFragment implements ListRssNewsAdapter
 
     @Override
     void onViewAppear() {
-        getData();
+
     }
 
     private void getData() {
@@ -57,6 +57,7 @@ public class ListNewsFragment extends BaseFragment implements ListRssNewsAdapter
 
     @Override
     void initView(View view) {
+        getData();
         setUpRecycleView();
     }
 

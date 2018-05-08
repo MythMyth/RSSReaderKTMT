@@ -10,6 +10,7 @@
     <color name="bottom_unselected">#ffffff</color>
     <color name="background">#ffffff</color>
     <color name="white">#ffffff</color>
+    <color name="color_checkbox">#85ffffff</color>
     <color name="text_dark">#626262</color>
     <color name="dark_light">#B5B5B5</color>
     <color name="text_blue">#3E1CB1</color>

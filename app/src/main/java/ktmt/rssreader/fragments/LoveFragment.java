@@ -47,6 +47,8 @@ public class LoveFragment extends BaseFragment implements ListRssNewsAdapter.onC
         if(newsItems == null){
             return;
         }
+        listRssNewsAdapter.setBookmarkable(false);
+        listRssNewsAdapter.setIsDelete(true);
         rcvLove.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         rcvLove.setAdapter(listRssNewsAdapter);
         listRssNewsAdapter.setNewsItems(newsItems);
@@ -56,7 +58,7 @@ public class LoveFragment extends BaseFragment implements ListRssNewsAdapter.onC
     @Override
     void initView(View view) {
         tvTitle.setText("Yêu thích");
-        setUpButton(view,new int[]{R.id.btBack,R.id.btSearch});
+        setUpButton(view,new int[]{R.id.btBack,R.id.btSearch,R.id.btRecycleBin});
     }
 
     @OnClick(R.id.btSearch)

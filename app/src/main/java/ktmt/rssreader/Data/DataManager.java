@@ -24,6 +24,7 @@ public class DataManager {
     public static ListNewsItem listHistorys = new ListNewsItem();
     public static ListNewsItem listLoves = new ListNewsItem();
     public static ListNewsItem listBookmarks = new ListNewsItem();
+    public static List<NewsItem> listDelete = new ArrayList<>();
     public static final String HISTORY_LIST = "historyList";
     public static final String LOVE_LIST = "loveList";
     public static final String BOOKMARK_LIST = "bookmarkList";
@@ -111,16 +112,16 @@ public class DataManager {
         return (new Gson()).toJson(listNewsItem);
     }
 
-    public static void deleteData(String typeData, Activity activity, int position) {
+    public static void deleteData(String typeData, Activity activity, NewsItem newsItem) {
         switch (typeData) {
             case LOVE_LIST:
-                listLoves.remove(position);
+                listLoves.remove(newsItem);
                 break;
             case BOOKMARK_LIST:
-                listBookmarks.remove(position);
+                listBookmarks.remove(newsItem);
                 break;
             case HISTORY_LIST:
-                listHistorys.remove(position);
+                listHistorys.remove(newsItem);
                 break;
         }
         addItem(typeData, activity, null);
@@ -163,4 +164,31 @@ public class DataManager {
     }
 
 
+    public static void addItemDelete(NewsItem newsItem) {
+        listDelete.add(newsItem);
+    }
+
+    public static void resetDelete(){
+        listDelete.clear();
+    }
+
+    public static void deleteFromList(String whatList, Activity activity) {
+        switch (whatList){
+            case LOVE_LIST:
+                for (int i = 0; i < listDelete.size(); i++) {
+                    deleteData(LOVE_LIST,activity,listDelete.get(i));
+                }
+                break;
+            case BOOKMARK_LIST:
+                for (int i = 0; i < listDelete.size(); i++) {
+                    deleteData(BOOKMARK_LIST,activity,listDelete.get(i));
+                }
+                break;
+            case HISTORY_LIST:
+                for (int i = 0; i < listDelete.size(); i++) {
+                    deleteData(HISTORY_LIST,activity,listDelete.get(i));
+                }
+                break;
+        }
+    }
 }

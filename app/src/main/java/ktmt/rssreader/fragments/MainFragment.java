@@ -7,6 +7,8 @@ import android.view.View;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 
+import java.util.Objects;
+
 import butterknife.BindView;
 import ktmt.rssreader.R;
 import ktmt.rssreader.adapters.HomePagerAdapter;
@@ -59,6 +61,8 @@ public class MainFragment extends BaseFragment implements OnTabSelectListener {
             @Override
             public void onPageSelected(int position) {
                 bottomBar.selectTabAtPosition(position);
+                ((BaseFragment)((HomePagerAdapter) Objects.requireNonNull(viewPager.getAdapter()))
+                        .getItem(position)).refreshView();
             }
 
             @Override

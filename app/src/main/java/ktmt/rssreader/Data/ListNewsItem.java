@@ -17,7 +17,7 @@ public class ListNewsItem {
         newsItems.add(newsItem);
     }
 
-    public void remove(int position) {
-        newsItems.remove(position);
+    public void remove(NewsItem newsItem) {
+        newsItems.remove(newsItem);
     }
 }

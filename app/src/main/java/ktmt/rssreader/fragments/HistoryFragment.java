@@ -44,15 +44,18 @@ public class HistoryFragment extends BaseFragment implements ListRssNewsAdapter.
     @Override
     void initView(View view) {
         tvTitle.setText("Lịch sử");
-        setUpButton(view, new int[]{R.id.btBack, R.id.btSearch});
+        Log.e("initView: ", "historyFrag" );
+        setUpButton(view, new int[]{R.id.btBack, R.id.btSearch,R.id.btRecycleBin});
     }
 
     @Override
     void onViewAppear() {
+        Log.e("onViewAppear: ", "historyFrag" );
         newsItems = Objects.requireNonNull(DataManager.getData(DataManager.HISTORY_LIST, Objects.requireNonNull(getActivity()))).getNewsItems();
         if (newsItems == null) {
             return;
         }
+        listRssNewsAdapter.setBookmarkable(false);
         rcvBookmark.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         rcvBookmark.setAdapter(listRssNewsAdapter);
         listRssNewsAdapter.setNewsItems(newsItems);

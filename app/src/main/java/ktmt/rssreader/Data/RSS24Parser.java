@@ -52,12 +52,15 @@ public class RSS24Parser extends DefaultHandler {
             String title = new String(ch, start, length);
             try {
                 newsList.get(newsList.size() - 1).title = newsList.get(newsList.size() - 1).title + title;
+                newsList.get(newsList.size() - 1).title = newsList.get(newsList.size() - 1).title.replace("&#34;","\"");
+                Log.e("characters: ","" );
             } catch (Exception e) {
                 Log.e("Error", "");
             }
         } else if (tabName.equalsIgnoreCase("img")) {
             String des = new String(ch, start, length);
             try {
+                des = des.replace("&#34;","\"");
                 newsList.get(newsList.size() - 1).des = newsList.get(newsList.size() - 1).des + des;
             } catch (Exception e) {
                 Log.e("Error", "");

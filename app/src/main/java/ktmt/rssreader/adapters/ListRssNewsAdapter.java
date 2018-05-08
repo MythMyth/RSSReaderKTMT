@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,6 +20,7 @@ import java.util.PropertyPermission;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import ktmt.rssreader.Data.DataManager;
 import ktmt.rssreader.Data.NewsItem;
@@ -29,8 +31,15 @@ import ktmt.rssreader.R;
 public class ListRssNewsAdapter extends RecyclerView.Adapter<ListRssNewsAdapter.BaseHolder> {
 
     private List<NewsItem> newsItems = new ArrayList<>();
+    private boolean isBookmarkable = true;
+    private boolean isDelete = false;
 
     public ListRssNewsAdapter() {
+    }
+
+    public void setIsDelete(boolean isDelete) {
+        this.isDelete = isDelete;
+        notifyDataSetChanged();
     }
 
     public interface onClickItemListener{
@@ -52,6 +61,14 @@ public class ListRssNewsAdapter extends RecyclerView.Adapter<ListRssNewsAdapter.
         notifyDataSetChanged();
     }
 
+    public boolean isBookmarkable() {
+        return isBookmarkable;
+    }
+
+    public void setBookmarkable(boolean bookmarkable) {
+        isBookmarkable = bookmarkable;
+    }
+
     @NonNull
     @Override
     public BaseHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -68,6 +85,10 @@ public class ListRssNewsAdapter extends RecyclerView.Adapter<ListRssNewsAdapter.
         return newsItems.size();
     }
 
+    public void onRecycleBinClick(){
+
+    }
+
     class ChildHolder extends BaseHolder{
 
         @BindView(R.id.tvTitle)
@@ -80,8 +101,10 @@ public class ListRssNewsAdapter extends RecyclerView.Adapter<ListRssNewsAdapter.
         TextView tvDescription;
         @BindView(R.id.imvBookmark)
         ImageView imvBookmark;
+        @BindView(R.id.checkBox)
+        CheckBox checkBox;
 
-        private boolean isBookmarked ;
+        private boolean isBookmarked;
 
         ChildHolder(View itemView) {
             super(itemView);
@@ -99,6 +122,12 @@ public class ListRssNewsAdapter extends RecyclerView.Adapter<ListRssNewsAdapter.
                 GlideApp.with(itemView.getContext()).load(R.drawable.ic_bookmark_unselected).into(imvBookmark);
             }
             GlideApp.with(itemView.getContext()).load(newsItems.get(position).getImageLink()).into(imageView);
+            if(!isBookmarkable){
+                imvBookmark.setVisibility(View.GONE);
+            }
+            if(isDelete){
+                checkBox.setVisibility(View.VISIBLE);
+            }
         }
 
         @OnClick(R.id.imvBookmark)
@@ -108,16 +137,29 @@ public class ListRssNewsAdapter extends RecyclerView.Adapter<ListRssNewsAdapter.
                 GlideApp.with(itemView.getContext()).load(R.drawable.ic_bookmark_selected).into(imvBookmark);
             }
         }
+
+        @OnCheckedChanged(R.id.checkBox)
+        public void onCheckedCheckBoxChange(){
+            DataManager.addItemDelete(newsItems.get(getAdapterPosition()));
+        }
+
+        public void deleteBookMark() {
+            if(isBookmarked) {
+                DataManager.deleteData(DataManager.BOOKMARK_LIST, (Activity) Objects.requireNonNull(itemView.getContext()), newsItems.get(getAdapterPosition()));
+            }
+        }
+
     }
 
     abstract class BaseHolder extends RecyclerView.ViewHolder {
-        BaseHolder(View itemView) {
+        BaseHolder(final View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     onClickItemListener.onClickItem(getAdapterPosition());
+                    ((ChildHolder) BaseHolder.this).deleteBookMark();
                 }
             });
         }
