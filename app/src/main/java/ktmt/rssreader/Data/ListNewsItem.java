@@ -13,11 +13,11 @@ public class ListNewsItem {
         this.newsItems = newsItems;
     }
 
-    public void addItem(NewsItem newsItem) {
-        newsItems.add(newsItem);
+    public void addItem(NewsItem newsItem, int i) {
+        newsItems.add(i,newsItem);
     }
 
-    public void remove(NewsItem newsItem) {
-        newsItems.remove(newsItem);
+    public void remove(int position) {
+        newsItems.remove(position);
     }
 }

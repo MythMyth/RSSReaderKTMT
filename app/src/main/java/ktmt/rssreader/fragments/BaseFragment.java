@@ -56,9 +56,12 @@ public class BaseFragment extends Fragment {
 
     }
 
-    void setUpButton(View view, int[] buttonIds){
-        for (int buttonId : buttonIds) {
+    void setUpButton(View view, int[] buttonIdsVisiable, int[] buttonIdsHide){
+        for (int buttonId : buttonIdsVisiable) {
             view.findViewById(buttonId).setVisibility(View.VISIBLE);
+        }
+        for (int buttonId : buttonIdsHide) {
+            view.findViewById(buttonId).setVisibility(View.GONE);
         }
     }
 

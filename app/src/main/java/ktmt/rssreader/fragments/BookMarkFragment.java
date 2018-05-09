@@ -1,6 +1,9 @@
 package ktmt.rssreader.fragments;
 
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -72,7 +75,7 @@ public class BookMarkFragment extends BaseFragment implements ListRssNewsAdapter
     void initView(View view) {
         Log.e("initView: ", "bookmark");
         tvTitle.setText("Đánh dấu");
-        setUpButton(view, new int[]{R.id.btBack, R.id.btSearch, R.id.btRecycleBin});
+        setUpButton(view, new int[]{R.id.btBack, R.id.btSearch, R.id.btRecycleBin}, new int[]{R.id.btCheck,R.id.btClose});
     }
 
     @Override
@@ -104,37 +107,35 @@ public class BookMarkFragment extends BaseFragment implements ListRssNewsAdapter
     @Override
     public void refreshView() {
         Log.e("refreshView: ", "bookmark");
-        newsItems = Objects.requireNonNull(DataManager.getData(BOOKMARK_LIST, Objects.requireNonNull(getActivity()))).getNewsItems();
+        if(getActivity() == null){
+            return;
+        }
+        newsItems = DataManager.getData(BOOKMARK_LIST, getActivity()).getNewsItems();
         listRssNewsAdapter.setNewsItems(newsItems);
+        isDeleMode = false;
     }
 
     @OnClick(R.id.btRecycleBin)
     public void onBtRecycleBinClick(){
-        btBack.setVisibility(View.GONE);
+        isDeleMode = true;
         listRssNewsAdapter.setIsDelete(true);
-        btRecycleBin.setVisibility(View.GONE);
-        btSearch.setVisibility(View.GONE);
-        btCheck.setVisibility(View.VISIBLE);
-        btClose.setVisibility(View.VISIBLE);
+        setUpButton(this.getView(), new int[]{R.id.btCheck,R.id.btClose}, new int[]{R.id.btBack, R.id.btSearch, R.id.btRecycleBin});
     }
 
+    @TargetApi(Build.VERSION_CODES.N)
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @OnClick(R.id.btCheck)
     public void onAcceptDelete(){
         DataManager.deleteFromList(BOOKMARK_LIST,getActivity());
-        btBack.setVisibility(View.VISIBLE);
-        btRecycleBin.setVisibility(View.VISIBLE);
-        btSearch.setVisibility(View.VISIBLE);
-        btCheck.setVisibility(View.GONE);
-        btClose.setVisibility(View.GONE);
+        setUpButton(this.getView(), new int[]{R.id.btBack, R.id.btSearch, R.id.btRecycleBin}, new int[]{R.id.btCheck,R.id.btClose});
+        refreshView();
+        listRssNewsAdapter.setIsDelete(false);
     }
 
     @OnClick(R.id.btClose)
     public void onCloseClick(){
         DataManager.resetDelete();
-        btBack.setVisibility(View.VISIBLE);
-        btRecycleBin.setVisibility(View.VISIBLE);
-        btSearch.setVisibility(View.VISIBLE);
-        btCheck.setVisibility(View.GONE);
-        btClose.setVisibility(View.GONE);
+        listRssNewsAdapter.setIsDelete(false);
+        setUpButton(this.getView(), new int[]{R.id.btBack, R.id.btSearch, R.id.btRecycleBin}, new int[]{R.id.btCheck,R.id.btClose});
     }
 }

@@ -49,7 +49,7 @@ public class DetailNewsFragment extends BaseFragment {
     void initView(View view) {
         tvTitle.setText("Tin tức");
         settingWebView();
-        setUpButton(view,new int[]{R.id.btBack,R.id.btLove});
+        setUpButton(view,new int[]{R.id.btBack,R.id.btLove}, new int[]{});
         GetBodyNewsAsysn bodyNewsAsysn = new GetBodyNewsAsysn(webView);
         bodyNewsAsysn.execute(newsItem.link,String.valueOf(webID));
     }

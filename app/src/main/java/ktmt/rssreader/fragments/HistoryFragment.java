@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -20,14 +21,28 @@ import ktmt.rssreader.MainActivity;
 import ktmt.rssreader.R;
 import ktmt.rssreader.adapters.ListRssNewsAdapter;
 
+import static ktmt.rssreader.Data.DataManager.BOOKMARK_LIST;
+import static ktmt.rssreader.Data.DataManager.HISTORY_LIST;
+
 public class HistoryFragment extends BaseFragment implements ListRssNewsAdapter.onClickItemListener{
 
     @BindView(R.id.rcvHistory)
     RecyclerView rcvBookmark;
     @BindView(R.id.tvTitle)
     TextView tvTitle;
+    @BindView(R.id.btBack)
+    ImageView btBack;
+    @BindView(R.id.btRecycleBin)
+    ImageView btRecycleBin;
+    @BindView(R.id.btSearch)
+    ImageView btSearch;
+    @BindView(R.id.btCheck)
+    ImageView btCheck;
+    @BindView(R.id.btClose)
+    ImageView btClose;
     private ListRssNewsAdapter listRssNewsAdapter = new ListRssNewsAdapter();
     private List<NewsItem> newsItems = new ArrayList<>();
+    private boolean isDeleMode = false;
 
     public static HistoryFragment newInstance() {
         Bundle args = new Bundle();
@@ -45,7 +60,7 @@ public class HistoryFragment extends BaseFragment implements ListRssNewsAdapter.
     void initView(View view) {
         tvTitle.setText("Lịch sử");
         Log.e("initView: ", "historyFrag" );
-        setUpButton(view, new int[]{R.id.btBack, R.id.btSearch,R.id.btRecycleBin});
+        setUpButton(view, new int[]{R.id.btBack, R.id.btSearch, R.id.btRecycleBin}, new int[]{R.id.btCheck,R.id.btClose});
     }
 
     @Override
@@ -75,6 +90,43 @@ public class HistoryFragment extends BaseFragment implements ListRssNewsAdapter.
 
     @Override
     public void onClickItem(int position) {
-        ((MainActivity) Objects.requireNonNull(getActivity())).changeFragment(DetailNewsFragment.newInstance(newsItems.get(position),newsItems.get(position).webId));
+        if(!isDeleMode) {
+            ((MainActivity) Objects.requireNonNull(getActivity())).changeFragment(DetailNewsFragment.newInstance(newsItems.get(position), newsItems.get(position).webId));
+            DataManager.addItem(DataManager.HISTORY_LIST, Objects.requireNonNull(getActivity()), newsItems.get(position));
+        }
+    }
+
+    @Override
+    public void refreshView() {
+        Log.e("refreshView: ", "bookmark");
+        if(getActivity() == null){
+            return;
+        }
+        newsItems = DataManager.getData(HISTORY_LIST, getActivity()).getNewsItems();
+        listRssNewsAdapter.setNewsItems(newsItems);
+    }
+
+    @OnClick(R.id.btRecycleBin)
+    public void onBtRecycleBinClick(){
+        isDeleMode = true;
+        listRssNewsAdapter.setIsDelete(true);
+        setUpButton(this.getView(), new int[]{R.id.btCheck,R.id.btClose}, new int[]{R.id.btBack, R.id.btSearch, R.id.btRecycleBin});
+    }
+
+    @OnClick(R.id.btCheck)
+    public void onAcceptDelete(){
+        isDeleMode = false;
+        DataManager.deleteFromList(HISTORY_LIST,getActivity());
+        setUpButton(this.getView(), new int[]{R.id.btBack, R.id.btSearch, R.id.btRecycleBin}, new int[]{R.id.btCheck,R.id.btClose});
+        refreshView();
+        listRssNewsAdapter.setIsDelete(false);
+    }
+
+    @OnClick(R.id.btClose)
+    public void onCloseClick(){
+        isDeleMode = false;
+        DataManager.resetDelete();
+        listRssNewsAdapter.setIsDelete(false);
+        setUpButton(this.getView(), new int[]{R.id.btBack, R.id.btSearch, R.id.btRecycleBin}, new int[]{R.id.btCheck,R.id.btClose});
     }
 }

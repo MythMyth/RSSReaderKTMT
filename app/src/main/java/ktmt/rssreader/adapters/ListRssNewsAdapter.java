@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -125,8 +126,11 @@ public class ListRssNewsAdapter extends RecyclerView.Adapter<ListRssNewsAdapter.
             if(!isBookmarkable){
                 imvBookmark.setVisibility(View.GONE);
             }
+            checkBox.setChecked(false);
             if(isDelete){
                 checkBox.setVisibility(View.VISIBLE);
+            } else {
+                checkBox.setVisibility(View.GONE);
             }
         }
 
@@ -140,12 +144,14 @@ public class ListRssNewsAdapter extends RecyclerView.Adapter<ListRssNewsAdapter.
 
         @OnCheckedChanged(R.id.checkBox)
         public void onCheckedCheckBoxChange(){
-            DataManager.addItemDelete(newsItems.get(getAdapterPosition()));
+            if(checkBox.isChecked()) {
+                DataManager.addItemDelete(getAdapterPosition());
+            }
         }
 
         public void deleteBookMark() {
             if(isBookmarked) {
-                DataManager.deleteData(DataManager.BOOKMARK_LIST, (Activity) Objects.requireNonNull(itemView.getContext()), newsItems.get(getAdapterPosition()));
+                DataManager.deleteData(DataManager.BOOKMARK_LIST, (Activity) Objects.requireNonNull(itemView.getContext()), getAdapterPosition());
             }
         }
 
