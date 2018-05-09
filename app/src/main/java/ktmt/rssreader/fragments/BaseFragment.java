@@ -19,6 +19,8 @@ import ktmt.rssreader.R;
 
 public class BaseFragment extends Fragment {
 
+    private View view;
+    private boolean isFirstTime = true;
     @Override
     public void onStart() {
         super.onStart();
@@ -32,10 +34,23 @@ public class BaseFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(getLayoutResource(), container, false);
-        ButterKnife.bind(this, view);
-        initView(view);
-        return view;
+        Log.e("onCreateView: ", String.valueOf(isFirstTime) );
+        if(isFirstTime){
+            view = inflater.inflate(getLayoutResource(), container, false);
+            ButterKnife.bind(this, view);
+            initView(view);
+            isFirstTime = false;
+            return view;
+        } else {
+            if (!isKeepFragment()) {
+                view = inflater.inflate(getLayoutResource(), container, false);
+                ButterKnife.bind(this, view);
+                initView(view);
+                return view;
+            } else {
+                return view;
+            }
+        }
     }
 
     void initView(View view) {
@@ -78,5 +93,9 @@ public class BaseFragment extends Fragment {
 
     public void refreshView() {
 
+    }
+
+    public boolean isKeepFragment(){
+        return false;
     }
 }

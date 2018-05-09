@@ -81,4 +81,9 @@ public class ListNewsFragment extends BaseFragment implements ListRssNewsAdapter
         ((MainActivity) Objects.requireNonNull(getActivity())).changeFragment(DetailNewsFragment.newInstance(newsItems.get(position),webId));
         DataManager.addItem(DataManager.HISTORY_LIST, Objects.requireNonNull(getActivity()), newsItems.get(position));
     }
+
+    @Override
+    public boolean isKeepFragment() {
+        return true;
+    }
 }

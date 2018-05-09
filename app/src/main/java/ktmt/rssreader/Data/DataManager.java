@@ -240,4 +240,8 @@ public class DataManager {
         }
         resetDelete();
     }
+
+    public static void removeItemDelete(int position) {
+        listDelete.remove(Integer.valueOf(position));
+    }
 }

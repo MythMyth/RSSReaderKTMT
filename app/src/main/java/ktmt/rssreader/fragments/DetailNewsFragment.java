@@ -1,5 +1,6 @@
 package ktmt.rssreader.fragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -54,6 +55,7 @@ public class DetailNewsFragment extends BaseFragment {
         bodyNewsAsysn.execute(newsItem.link,String.valueOf(webID));
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     private void settingWebView() {
         WebSettings settings = webView.getSettings();
         settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
@@ -62,6 +64,7 @@ public class DetailNewsFragment extends BaseFragment {
         settings.setLoadsImagesAutomatically(true);
         settings.setLoadWithOverviewMode(true);
         settings.setUseWideViewPort(true);
+        settings.setSupportZoom(true);
         settings.setMinimumFontSize(24);
     }
 

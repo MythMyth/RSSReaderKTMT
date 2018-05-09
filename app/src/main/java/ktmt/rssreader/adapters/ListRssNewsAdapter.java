@@ -122,7 +122,9 @@ public class ListRssNewsAdapter extends RecyclerView.Adapter<ListRssNewsAdapter.
             } else {
                 GlideApp.with(itemView.getContext()).load(R.drawable.ic_bookmark_unselected).into(imvBookmark);
             }
-            GlideApp.with(itemView.getContext()).load(newsItems.get(position).getImageLink()).into(imageView);
+            GlideApp.with(itemView.getContext()).load(newsItems.get(position).getImageLink())
+                    .placeholder(R.drawable.img_error)
+                    .into(imageView);
             if(!isBookmarkable){
                 imvBookmark.setVisibility(View.GONE);
             }
@@ -146,6 +148,8 @@ public class ListRssNewsAdapter extends RecyclerView.Adapter<ListRssNewsAdapter.
         public void onCheckedCheckBoxChange(){
             if(checkBox.isChecked()) {
                 DataManager.addItemDelete(getAdapterPosition());
+            } else {
+                DataManager.removeItemDelete(getAdapterPosition());
             }
         }
 

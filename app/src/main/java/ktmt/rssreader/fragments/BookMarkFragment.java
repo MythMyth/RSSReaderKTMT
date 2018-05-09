@@ -61,6 +61,14 @@ public class BookMarkFragment extends BaseFragment implements ListRssNewsAdapter
     @Override
     void onViewAppear() {
         Log.e("onViewAppear: ", "bookmark");
+        refreshView();
+    }
+
+    @Override
+    void initView(View view) {
+        Log.e("initView: ", "bookmark");
+        tvTitle.setText("Đánh dấu");
+        setUpButton(view, new int[]{R.id.btBack, R.id.btSearch, R.id.btRecycleBin}, new int[]{R.id.btCheck,R.id.btClose});
         newsItems = Objects.requireNonNull(DataManager.getData(BOOKMARK_LIST, Objects.requireNonNull(getActivity()))).getNewsItems();
         if (newsItems == null) {
             return;
@@ -69,13 +77,6 @@ public class BookMarkFragment extends BaseFragment implements ListRssNewsAdapter
         rcvBookmark.setAdapter(listRssNewsAdapter);
         listRssNewsAdapter.setNewsItems(newsItems);
         listRssNewsAdapter.setOnClickItemListener(this);
-    }
-
-    @Override
-    void initView(View view) {
-        Log.e("initView: ", "bookmark");
-        tvTitle.setText("Đánh dấu");
-        setUpButton(view, new int[]{R.id.btBack, R.id.btSearch, R.id.btRecycleBin}, new int[]{R.id.btCheck,R.id.btClose});
     }
 
     @Override
@@ -112,6 +113,7 @@ public class BookMarkFragment extends BaseFragment implements ListRssNewsAdapter
         }
         newsItems = DataManager.getData(BOOKMARK_LIST, getActivity()).getNewsItems();
         listRssNewsAdapter.setNewsItems(newsItems);
+        listRssNewsAdapter.setIsDelete(false);
         isDeleMode = false;
     }
 
@@ -129,13 +131,13 @@ public class BookMarkFragment extends BaseFragment implements ListRssNewsAdapter
         DataManager.deleteFromList(BOOKMARK_LIST,getActivity());
         setUpButton(this.getView(), new int[]{R.id.btBack, R.id.btSearch, R.id.btRecycleBin}, new int[]{R.id.btCheck,R.id.btClose});
         refreshView();
-        listRssNewsAdapter.setIsDelete(false);
     }
 
     @OnClick(R.id.btClose)
     public void onCloseClick(){
         DataManager.resetDelete();
         listRssNewsAdapter.setIsDelete(false);
+        isDeleMode = false;
         setUpButton(this.getView(), new int[]{R.id.btBack, R.id.btSearch, R.id.btRecycleBin}, new int[]{R.id.btCheck,R.id.btClose});
     }
 }

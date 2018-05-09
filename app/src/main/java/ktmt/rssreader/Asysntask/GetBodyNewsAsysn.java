@@ -18,6 +18,12 @@ import static ktmt.rssreader.Data.Link.ID_VNXPRESS;
 public class GetBodyNewsAsysn extends AsyncTask<String, Void, String> {
 
     private WebView webView;
+    private String[] listCssQueryVn = new String[]{
+            "div.col_noidung",
+            "article.content_detail.fck_detail.width_common",
+            "figure.ob-os.ob",
+            "article.content_detail.fck_detail.width_common.block_ads_connect"
+    };
 
     public GetBodyNewsAsysn(WebView webView)
     {
@@ -59,16 +65,26 @@ public class GetBodyNewsAsysn extends AsyncTask<String, Void, String> {
     }
 
     private String getBodyVnxpress(Document document) {
-        Elements elements ;
-        elements  = document.select("article");
-        if(elements.size() == 0){
-            elements = document.select("figure.ob-os.ob");
-        }
+        Element element = getElement(document);
         String time = document.select("header.clearfix").toString();
         String title = document.select("h1").get(0).toString();
         String description = document.select("h2.description").toString();
-        Element element = elements.get(0);
         return title + description + time + element.toString();
+    }
+
+    private Element getElement(Document document){
+        Elements elements = new Elements();
+        for (String aListCssQueryVn : listCssQueryVn) {
+            elements = document.select(aListCssQueryVn);
+            if(elements.size() >0) {
+                break;
+            }
+        }
+        if(elements.get(0).getElementById("left_calculator") != null){
+            return elements.get(0).getElementById("left_calculator");
+        } else {
+            return elements.get(0);
+        }
     }
 
     @Override
