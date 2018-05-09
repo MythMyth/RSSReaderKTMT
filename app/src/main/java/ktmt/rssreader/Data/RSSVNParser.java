@@ -18,7 +18,7 @@ public class RSSVNParser extends DefaultHandler {
     String tabName;
     String descript;
     boolean startParse;
-    public ArrayList<NewsItem> newsList = new ArrayList<>();
+    private ArrayList<NewsItem> newsList = new ArrayList<>();
     boolean parseTitle, parseDes, parseDate, parseLink;
 
     @Override
@@ -93,5 +93,9 @@ public class RSSVNParser extends DefaultHandler {
             newsList.get(newsList.size()-1).link = lnk;
             parseLink = false;
         }
+    }
+
+    public ArrayList<NewsItem> getNewsList() {
+        return newsList;
     }
 }

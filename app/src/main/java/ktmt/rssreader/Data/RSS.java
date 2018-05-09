@@ -37,13 +37,13 @@ public class RSS {
                         RSSVNParser rssParser = new RSSVNParser();
                         parser.parse(stream, rssParser);
 
-                        DataManager.UpdateNews(RSS.this.webId, RSS.this.channelId, rssParser.newsList);
+                        DataManager.UpdateNews(RSS.this.webId, RSS.this.channelId, rssParser.getNewsList());
                     }
                     else
                     {
                         RSS24Parser rssParser = new RSS24Parser();
                         parser.parse(stream, rssParser);
-                        DataManager.UpdateNews(RSS.this.webId, RSS.this.channelId, rssParser.newsList);
+                        DataManager.UpdateNews(RSS.this.webId, RSS.this.channelId, rssParser.getNewsList());
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -54,7 +54,7 @@ public class RSS {
 
     public static List<NewsItem> getRSSList(final int webId, final int channelId) {
         String link = Link.getLink(webId, channelId);
-        GetRssListAsyn getRssListAsyn = new GetRssListAsyn();
+        GetRssListAsyn getRssListAsyn = new GetRssListAsyn(webId);
         try {
             getRssListAsyn.execute(link).get();
         } catch (InterruptedException | ExecutionException e) {

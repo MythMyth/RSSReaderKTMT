@@ -23,7 +23,6 @@ public class BaseFragment extends Fragment {
     public void onStart() {
         super.onStart();
         onViewAppear();
-        Log.e("onStart: ", "1" );
     }
 
     void onViewAppear() {
@@ -57,9 +56,12 @@ public class BaseFragment extends Fragment {
 
     }
 
-    void setUpButton(View view, int[] buttonIds){
-        for (int buttonId : buttonIds) {
+    void setUpButton(View view, int[] buttonIdsVisiable, int[] buttonIdsHide){
+        for (int buttonId : buttonIdsVisiable) {
             view.findViewById(buttonId).setVisibility(View.VISIBLE);
+        }
+        for (int buttonId : buttonIdsHide) {
+            view.findViewById(buttonId).setVisibility(View.GONE);
         }
     }
 
@@ -69,8 +71,12 @@ public class BaseFragment extends Fragment {
     }
 
     public void onBackPressd(){
-        Log.e("onBackPre: ", "sfsfsfs" );
-        ((MainActivity) Objects.requireNonNull(getActivity())).getSupportFragmentManager().popBackStack();
+        Objects.requireNonNull(getActivity()).onBackPressed();
+//        Log.e("onBackPre: ", "sfsfsfs" );
+//        ((MainActivity) Objects.requireNonNull(getActivity())).getSupportFragmentManager().popBackStack();
     }
 
+    public void refreshView() {
+
+    }
 }

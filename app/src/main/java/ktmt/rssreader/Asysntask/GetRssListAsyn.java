@@ -1,33 +1,49 @@
 package ktmt.rssreader.Asysntask;
 
 import android.os.AsyncTask;
-import android.util.Log;
-import android.widget.LinearLayout;
+import org.xml.sax.InputSource;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import ktmt.rssreader.Data.Link;
 import ktmt.rssreader.Data.NewsItem;
-import ktmt.rssreader.Data.RSSParser;
+import ktmt.rssreader.Data.RSS24Parser;
 import ktmt.rssreader.Data.RSSReceiver;
+import ktmt.rssreader.Data.RSSVNParser;
+
+import static ktmt.rssreader.Data.Link.ID_24H;
+import static ktmt.rssreader.Data.Link.ID_VNXPRESS;
 
 public class GetRssListAsyn extends AsyncTask<String, Void , Void> {
 
     private List<NewsItem> newsItems = new ArrayList<>();
+    private int webID;
+
+    public GetRssListAsyn(int webID) {
+        this.webID = webID;
+    }
+
     @Override
     protected Void doInBackground(String... url) {
-        InputStream stream = RSSReceiver.getRssStream(url[0]);
+        InputSource stream = RSSReceiver.getRssStream(url[0]);
         try {
             SAXParserFactory fac = SAXParserFactory.newInstance();
             SAXParser parser = fac.newSAXParser();
-            RSSParser rssParser = new RSSParser();
-            parser.parse(stream, rssParser);
-            newsItems = rssParser.newsList;
+            if(webID == ID_VNXPRESS) {
+                RSSVNParser rssParser = new RSSVNParser();
+                parser.parse(stream, rssParser);
+
+                newsItems = rssParser.getNewsList();
+            }
+            else if(webID == ID_24H)
+            {
+                RSS24Parser rssParser = new RSS24Parser();
+                parser.parse(stream, rssParser);
+                newsItems = rssParser.getNewsList();
+            }
         }
         catch (Exception e)
         {

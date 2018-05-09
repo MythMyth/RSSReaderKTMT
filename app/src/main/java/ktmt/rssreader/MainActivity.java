@@ -26,10 +26,11 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         DataManager.dbInit(this);
         super.onCreate(savedInstanceState);
-        RSS receive = new RSS();
-        receive.getRSS(0, 0);
+//        RSS receive = new RSS();
+//        receive.getRSS(0, 0);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        DataManager.getData(this);
         changeFragment(MainFragment.newInstance());
     }
 

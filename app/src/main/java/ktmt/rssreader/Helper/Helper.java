@@ -9,6 +9,11 @@ public class Helper {
 
     @SuppressLint("SimpleDateFormat")
     public static String changeDateToString(Date date){
-        return new SimpleDateFormat("HH:kk:mm dd/MM/yyyy").format(date);
+        try { return new SimpleDateFormat("HH:kk:mm dd/MM/yyyy").format(date);
+
+        } catch (Exception e){
+            return "";
+        }
+
     }
 }

@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.Objects;
@@ -14,6 +15,7 @@ import butterknife.OnClick;
 import ktmt.rssreader.Asysntask.GetBodyNewsAsysn;
 import ktmt.rssreader.Data.DataManager;
 import ktmt.rssreader.Data.NewsItem;
+import ktmt.rssreader.GlideModule.GlideApp;
 import ktmt.rssreader.R;
 
 public class DetailNewsFragment extends BaseFragment {
@@ -24,6 +26,10 @@ public class DetailNewsFragment extends BaseFragment {
     TextView tvTitle;
     @BindView(R.id.web_view)
     WebView webView;
+    @BindView(R.id.btLove)
+    ImageView btLove;
+
+
 
     public static DetailNewsFragment newInstance(NewsItem newsItem, int webID){
         Bundle args = new Bundle();
@@ -43,7 +49,7 @@ public class DetailNewsFragment extends BaseFragment {
     void initView(View view) {
         tvTitle.setText("Tin tức");
         settingWebView();
-        setUpButton(view,new int[]{R.id.btBack,R.id.btLove});
+        setUpButton(view,new int[]{R.id.btBack,R.id.btLove}, new int[]{});
         GetBodyNewsAsysn bodyNewsAsysn = new GetBodyNewsAsysn(webView);
         bodyNewsAsysn.execute(newsItem.link,String.valueOf(webID));
     }
@@ -77,13 +83,12 @@ public class DetailNewsFragment extends BaseFragment {
         super.onBackPressd();
     }
 
-    @OnClick(R.id.btBookMark)
-    public void onBookMarkButtonClick(){
-        DataManager.addItem(DataManager.BOOKMARK_LIST, Objects.requireNonNull(getActivity()),newsItem);
-    }
-
     @OnClick(R.id.btLove)
     public void onLoveButtonClick(){
-        DataManager.addItem(DataManager.LOVE_LIST, Objects.requireNonNull(getActivity()),newsItem);
+        if(!DataManager.isLoved(newsItem.link)) {
+            DataManager.addItem(DataManager.LOVE_LIST, Objects.requireNonNull(getActivity()), newsItem);
+            GlideApp.with(this).load(R.drawable.ic_love_selected).into(btLove);
+        }
     }
+
 }
