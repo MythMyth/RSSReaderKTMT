@@ -19,7 +19,7 @@ import java.util.Locale;
  */
 
 public class RSS24Parser extends DefaultHandler {
-    String tabName;
+    String tabName, descript;
     boolean startParse;
     boolean parseTitle, parseDes, parseDate, parseLink;
     private ArrayList<NewsItem> newsList = new ArrayList<>();
@@ -30,6 +30,7 @@ public class RSS24Parser extends DefaultHandler {
         if (qName.equalsIgnoreCase("item")) {
             startParse = true;
             newsList.add(new NewsItem());
+            descript = "";
             parseDate = true;
             parseDes = true;
             parseLink = true;
@@ -65,7 +66,21 @@ public class RSS24Parser extends DefaultHandler {
             } catch (Exception e) {
                 Log.e("Error", "");
             }
-        } else if (tabName.equalsIgnoreCase("pubdate") && parseDate) {
+        }
+        else if(tabName.equalsIgnoreCase("description"))
+        {
+            descript = descript + new String(ch, start, length);
+            try {
+                newsList.get(newsList.size() - 1).des = descript.substring(descript.indexOf("<br />") + 6);
+                newsList.get(newsList.size() - 1).setImageLink(descript.substring(descript.indexOf("src=") + 5, descript.indexOf("alt=") - 2));
+            }
+            catch (Exception e)
+            {
+                Log.e("Error: ", e + "");
+                Log.e("Error: ", descript);
+            }
+        }
+        else if (tabName.equalsIgnoreCase("pubdate") && parseDate) {
             String dateString = new String(ch, start, length);
             SimpleDateFormat format = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z", Locale.ENGLISH);
             try {

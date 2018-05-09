@@ -2,10 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/RSSReader.iml" filepath="$PROJECT_DIR$/RSSReader.iml" />
+      <module fileurl="file://C:\Users\Myth\Documents\GitHub\RSSReaderKTMT\RSSReader.iml" filepath="C:\Users\Myth\Documents\GitHub\RSSReaderKTMT\RSSReader.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RSSReaderKTMT.iml" filepath="$PROJECT_DIR$/RSSReaderKTMT.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/project.iml" filepath="$PROJECT_DIR$/project.iml" />
-      <module fileurl="file://E:/backup/AndroidStudioProjects/RSSReader/project.iml" filepath="E:/backup/AndroidStudioProjects/RSSReader/project.iml" />
+      <module fileurl="file://E:\backup\AndroidStudioProjects\RSSReader\project.iml" filepath="E:\backup\AndroidStudioProjects\RSSReader\project.iml" />
     </modules>
   </component>
 </project>
