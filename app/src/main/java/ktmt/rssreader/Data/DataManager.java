@@ -49,14 +49,15 @@ public class DataManager {
     }
 
     public static void UpdateNews(int webId, int channelID, ArrayList<NewsItem> items) {
-        db.delete("DB", "webID = " + webId + "AND channelID = " + channelID, null);
+        db.delete("DB", "webID = " + webId + " AND channelID = " + channelID, null);
         for (NewsItem item : items)
         {
-            db.delete("DB", "link = " + item.link, null);
+            db.delete("DB", "link = '" + item.link+"'", null);
             ContentValues c = new ContentValues();
             c.put("title", item.title);
             c.put("content", item.des);
-            c.put("time", item.time.getTime());
+            if(item.time!=null)
+                c.put("time", item.time.getTime());
             c.put("link", item.link);
             c.put("imageLink", item.getImageLink());
             db.insert("DB", "", c);
