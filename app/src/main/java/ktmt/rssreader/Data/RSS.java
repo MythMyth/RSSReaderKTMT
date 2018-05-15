@@ -6,6 +6,7 @@ import org.xml.sax.InputSource;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.io.InputStreamReader;
@@ -65,6 +66,7 @@ public class RSS {
                 ) {
             newsItem.webId = webId;
         }
+        DataManager.UpdateNews(webId, channelId, new ArrayList<>(newsItems));
         return newsItems;
     }
 }
