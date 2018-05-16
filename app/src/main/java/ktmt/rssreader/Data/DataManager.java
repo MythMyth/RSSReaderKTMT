@@ -95,8 +95,8 @@ public class DataManager {
         String mutatedSearchString = searchString.trim().replace(" ", "%");
         mutatedSearchString = mutatedSearchString.replace("'", "");
         mutatedSearchString = mutatedSearchString.replace("\"", "");
-        Cursor c = db.rawQuery("SELECT * FROM DB WHERE webID = " + webId + " AND channelID = " + channelId +
-                "AND (title LIKE '" + mutatedSearchString + "' OR content LIKE '" + mutatedSearchString +"');", null);
+        mutatedSearchString = mutatedSearchString.replace("\'", "");
+        Cursor c = db.rawQuery("SELECT * FROM DB WHERE" + " (title LIKE '%" + mutatedSearchString + "%' OR content LIKE '%" + mutatedSearchString +"%') COLLATE NOCASE;", null);
         if(c.getCount()==0)
             return list;
         c.moveToFirst();
