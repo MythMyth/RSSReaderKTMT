@@ -1,6 +1,8 @@
 package ktmt.rssreader.fragments;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -20,8 +22,6 @@ import ktmt.rssreader.MainActivity;
 import ktmt.rssreader.R;
 import ktmt.rssreader.adapters.ListRssNewsAdapter;
 
-import static ktmt.rssreader.Data.DataManager.BOOKMARK_LIST;
-import static ktmt.rssreader.Data.DataManager.HISTORY_LIST;
 import static ktmt.rssreader.Data.DataManager.LOVE_LIST;
 
 public class LoveFragment extends BaseFragment implements ListRssNewsAdapter.onClickItemListener{
@@ -34,8 +34,7 @@ public class LoveFragment extends BaseFragment implements ListRssNewsAdapter.onC
     ImageView btBack;
     @BindView(R.id.btRecycleBin)
     ImageView btRecycleBin;
-    @BindView(R.id.btSearch)
-    ImageView btSearch;
+
     @BindView(R.id.btCheck)
     ImageView btCheck;
     @BindView(R.id.btClose)
@@ -73,13 +72,7 @@ public class LoveFragment extends BaseFragment implements ListRssNewsAdapter.onC
     @Override
     void initView(View view) {
         tvTitle.setText("Yêu thích");
-        setUpButton(view, new int[]{R.id.btBack, R.id.btSearch, R.id.btRecycleBin}, new int[]{R.id.btCheck,R.id.btClose});
-    }
-
-    @OnClick(R.id.btSearch)
-    public void onBtSearchClick(){
-        Log.e("onBtSearchClick: ", "sádads" );
-        super.onBtSearchClick();
+        setUpButton(view, new int[]{R.id.btBack, R.id.btRecycleBin}, new int[]{R.id.btCheck, R.id.btClose});
     }
 
     @OnClick(R.id.btBack)
@@ -111,14 +104,15 @@ public class LoveFragment extends BaseFragment implements ListRssNewsAdapter.onC
     public void onBtRecycleBinClick(){
         isDeleMode = true;
         listRssNewsAdapter.setIsDelete(true);
-        setUpButton(this.getView(), new int[]{R.id.btCheck,R.id.btClose}, new int[]{R.id.btBack, R.id.btSearch, R.id.btRecycleBin});
+        setUpButton(this.getView(), new int[]{R.id.btCheck, R.id.btClose}, new int[]{R.id.btBack, R.id.btRecycleBin});
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @OnClick(R.id.btCheck)
     public void onAcceptDelete(){
         isDeleMode = false;
         DataManager.deleteFromList(LOVE_LIST,getActivity());
-        setUpButton(this.getView(), new int[]{R.id.btBack, R.id.btSearch, R.id.btRecycleBin}, new int[]{R.id.btCheck,R.id.btClose});
+        setUpButton(this.getView(), new int[]{R.id.btBack, R.id.btRecycleBin}, new int[]{R.id.btCheck, R.id.btClose});
         refreshView();
         listRssNewsAdapter.setIsDelete(false);
     }
@@ -128,6 +122,6 @@ public class LoveFragment extends BaseFragment implements ListRssNewsAdapter.onC
         isDeleMode = false;
         DataManager.resetDelete();
         listRssNewsAdapter.setIsDelete(false);
-        setUpButton(this.getView(), new int[]{R.id.btBack, R.id.btSearch, R.id.btRecycleBin}, new int[]{R.id.btCheck,R.id.btClose});
+        setUpButton(this.getView(), new int[]{R.id.btBack, R.id.btRecycleBin}, new int[]{R.id.btCheck, R.id.btClose});
     }
 }

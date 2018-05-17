@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import butterknife.BindInt;
 import butterknife.BindView;
 import butterknife.OnClick;
 import ktmt.rssreader.Data.DataManager;
@@ -36,8 +35,7 @@ public class BookMarkFragment extends BaseFragment implements ListRssNewsAdapter
     ImageView btBack;
     @BindView(R.id.btRecycleBin)
     ImageView btRecycleBin;
-    @BindView(R.id.btSearch)
-    ImageView btSearch;
+
     @BindView(R.id.btCheck)
     ImageView btCheck;
     @BindView(R.id.btClose)
@@ -75,19 +73,13 @@ public class BookMarkFragment extends BaseFragment implements ListRssNewsAdapter
     void initView(View view) {
         Log.e("initView: ", "bookmark");
         tvTitle.setText("Đánh dấu");
-        setUpButton(view, new int[]{R.id.btBack, R.id.btSearch, R.id.btRecycleBin}, new int[]{R.id.btCheck,R.id.btClose});
+        setUpButton(view, new int[]{R.id.btBack, R.id.btRecycleBin}, new int[]{R.id.btCheck, R.id.btClose});
     }
 
     @Override
     public void onResume() {
         Log.e("onResume: ", "Bookmark");
         super.onResume();
-    }
-
-    @OnClick(R.id.btSearch)
-    public void onBtSearchClick() {
-        Log.e("onBtSearchClick: ", "sádads");
-        super.onBtSearchClick();
     }
 
     @OnClick(R.id.btBack)
@@ -106,20 +98,22 @@ public class BookMarkFragment extends BaseFragment implements ListRssNewsAdapter
 
     @Override
     public void refreshView() {
-        Log.e("refreshView: ", "bookmark");
+
+        Log.e("refreshView: ", "-------------- bookmark ---------------");
         if(getActivity() == null){
             return;
         }
         newsItems = DataManager.getData(BOOKMARK_LIST, getActivity()).getNewsItems();
         listRssNewsAdapter.setNewsItems(newsItems);
         isDeleMode = false;
+
     }
 
     @OnClick(R.id.btRecycleBin)
     public void onBtRecycleBinClick(){
         isDeleMode = true;
         listRssNewsAdapter.setIsDelete(true);
-        setUpButton(this.getView(), new int[]{R.id.btCheck,R.id.btClose}, new int[]{R.id.btBack, R.id.btSearch, R.id.btRecycleBin});
+        setUpButton(this.getView(), new int[]{R.id.btCheck, R.id.btClose}, new int[]{R.id.btBack, R.id.btRecycleBin});
     }
 
     @TargetApi(Build.VERSION_CODES.N)
@@ -127,7 +121,7 @@ public class BookMarkFragment extends BaseFragment implements ListRssNewsAdapter
     @OnClick(R.id.btCheck)
     public void onAcceptDelete(){
         DataManager.deleteFromList(BOOKMARK_LIST,getActivity());
-        setUpButton(this.getView(), new int[]{R.id.btBack, R.id.btSearch, R.id.btRecycleBin}, new int[]{R.id.btCheck,R.id.btClose});
+        setUpButton(this.getView(), new int[]{R.id.btBack, R.id.btRecycleBin}, new int[]{R.id.btCheck, R.id.btClose});
         refreshView();
         listRssNewsAdapter.setIsDelete(false);
     }
@@ -136,6 +130,6 @@ public class BookMarkFragment extends BaseFragment implements ListRssNewsAdapter
     public void onCloseClick(){
         DataManager.resetDelete();
         listRssNewsAdapter.setIsDelete(false);
-        setUpButton(this.getView(), new int[]{R.id.btBack, R.id.btSearch, R.id.btRecycleBin}, new int[]{R.id.btCheck,R.id.btClose});
+        setUpButton(this.getView(), new int[]{R.id.btBack, R.id.btRecycleBin}, new int[]{R.id.btCheck, R.id.btClose});
     }
 }

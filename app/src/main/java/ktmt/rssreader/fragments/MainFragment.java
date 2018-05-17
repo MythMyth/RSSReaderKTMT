@@ -2,6 +2,7 @@ package ktmt.rssreader.fragments;
 
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 
 import com.roughike.bottombar.BottomBar;
@@ -35,6 +36,7 @@ public class MainFragment extends BaseFragment implements OnTabSelectListener {
 
     @Override
     void initView(View view) {
+        Log.e("Main fragment", "----- init ------");
         setupPager();
     }
 
@@ -60,6 +62,7 @@ public class MainFragment extends BaseFragment implements OnTabSelectListener {
 
             @Override
             public void onPageSelected(int position) {
+                Log.e("Main fragment", "----- onPageSelected ------");
                 bottomBar.selectTabAtPosition(position);
                 ((BaseFragment)((HomePagerAdapter) Objects.requireNonNull(viewPager.getAdapter()))
                         .getItem(position)).refreshView();

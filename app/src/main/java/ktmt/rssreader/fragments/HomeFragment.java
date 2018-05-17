@@ -2,16 +2,13 @@ package ktmt.rssreader.fragments;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import ktmt.rssreader.Data.Link;
-import ktmt.rssreader.adapters.ListTitlePagerAdapter;
 import ktmt.rssreader.R;
 
 import static ktmt.rssreader.Data.Link.ID_24H;
@@ -24,6 +21,8 @@ public class HomeFragment extends BaseFragment {
     Button btVnxpress;
     @BindView(R.id.bt24h)
     Button bt24h;
+    @BindView(R.id.btRenew)
+    ImageView btRenew;
 
     public static HomeFragment newInstance() {
         Bundle args = new Bundle();
@@ -63,8 +62,15 @@ public class HomeFragment extends BaseFragment {
         changeFragment(ID_24H);
     }
 
+    @OnClick(R.id.btRenew)
+    public void onBtRenewClick() {
+        LocalData.initLocalData();
+        onBt24hClick();
+    }
+
     @SuppressLint("CommitTransaction")
     private void changeFragment(int webId) {
+        Log.e("Home fragment", "---------- change fragment ---------");
         getChildFragmentManager()
                 .beginTransaction()
                 .replace(R.id.containerHome, PagersNewsFragment.newInstance(webId), null)

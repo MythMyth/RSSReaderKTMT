@@ -1,11 +1,12 @@
 package ktmt.rssreader.fragments;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,7 +22,6 @@ import ktmt.rssreader.MainActivity;
 import ktmt.rssreader.R;
 import ktmt.rssreader.adapters.ListRssNewsAdapter;
 
-import static ktmt.rssreader.Data.DataManager.BOOKMARK_LIST;
 import static ktmt.rssreader.Data.DataManager.HISTORY_LIST;
 
 public class HistoryFragment extends BaseFragment implements ListRssNewsAdapter.onClickItemListener{
@@ -34,8 +34,6 @@ public class HistoryFragment extends BaseFragment implements ListRssNewsAdapter.
     ImageView btBack;
     @BindView(R.id.btRecycleBin)
     ImageView btRecycleBin;
-    @BindView(R.id.btSearch)
-    ImageView btSearch;
     @BindView(R.id.btCheck)
     ImageView btCheck;
     @BindView(R.id.btClose)
@@ -60,7 +58,7 @@ public class HistoryFragment extends BaseFragment implements ListRssNewsAdapter.
     void initView(View view) {
         tvTitle.setText("Lịch sử");
         Log.e("initView: ", "historyFrag" );
-        setUpButton(view, new int[]{R.id.btBack, R.id.btSearch, R.id.btRecycleBin}, new int[]{R.id.btCheck,R.id.btClose});
+        setUpButton(view, new int[]{R.id.btBack, R.id.btRecycleBin}, new int[]{R.id.btCheck, R.id.btClose});
     }
 
     @Override
@@ -77,11 +75,6 @@ public class HistoryFragment extends BaseFragment implements ListRssNewsAdapter.
         listRssNewsAdapter.setOnClickItemListener(this);
     }
 
-    @OnClick(R.id.btSearch)
-    public void onBtSearchClick() {
-        Log.e("onBtSearchClick: ", "sádads");
-        super.onBtSearchClick();
-    }
 
     @OnClick(R.id.btBack)
     public void onBackPressd() {
@@ -92,13 +85,15 @@ public class HistoryFragment extends BaseFragment implements ListRssNewsAdapter.
     public void onClickItem(int position) {
         if(!isDeleMode) {
             ((MainActivity) Objects.requireNonNull(getActivity())).changeFragment(DetailNewsFragment.newInstance(newsItems.get(position), newsItems.get(position).webId));
+            System.out.println("------------- " + newsItems.get(position).webId);
+            Log.e("onClickItem-history", String.valueOf(newsItems.get(position).webId));
             DataManager.addItem(DataManager.HISTORY_LIST, Objects.requireNonNull(getActivity()), newsItems.get(position));
         }
     }
 
     @Override
     public void refreshView() {
-        Log.e("refreshView: ", "bookmark");
+        Log.e("refreshView: ", "");
         if(getActivity() == null){
             return;
         }
@@ -110,14 +105,15 @@ public class HistoryFragment extends BaseFragment implements ListRssNewsAdapter.
     public void onBtRecycleBinClick(){
         isDeleMode = true;
         listRssNewsAdapter.setIsDelete(true);
-        setUpButton(this.getView(), new int[]{R.id.btCheck,R.id.btClose}, new int[]{R.id.btBack, R.id.btSearch, R.id.btRecycleBin});
+        setUpButton(this.getView(), new int[]{R.id.btCheck, R.id.btClose}, new int[]{R.id.btBack, R.id.btRecycleBin});
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @OnClick(R.id.btCheck)
     public void onAcceptDelete(){
         isDeleMode = false;
         DataManager.deleteFromList(HISTORY_LIST,getActivity());
-        setUpButton(this.getView(), new int[]{R.id.btBack, R.id.btSearch, R.id.btRecycleBin}, new int[]{R.id.btCheck,R.id.btClose});
+        setUpButton(this.getView(), new int[]{R.id.btBack, R.id.btRecycleBin}, new int[]{R.id.btCheck, R.id.btClose});
         refreshView();
         listRssNewsAdapter.setIsDelete(false);
     }
@@ -127,6 +123,6 @@ public class HistoryFragment extends BaseFragment implements ListRssNewsAdapter.
         isDeleMode = false;
         DataManager.resetDelete();
         listRssNewsAdapter.setIsDelete(false);
-        setUpButton(this.getView(), new int[]{R.id.btBack, R.id.btSearch, R.id.btRecycleBin}, new int[]{R.id.btCheck,R.id.btClose});
+        setUpButton(this.getView(), new int[]{R.id.btBack,  R.id.btRecycleBin}, new int[]{R.id.btCheck, R.id.btClose});
     }
 }

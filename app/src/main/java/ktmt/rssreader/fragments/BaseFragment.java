@@ -4,18 +4,13 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import java.util.Objects;
 
 import butterknife.ButterKnife;
-import butterknife.OnClick;
-import ktmt.rssreader.MainActivity;
-import ktmt.rssreader.R;
 
 public class BaseFragment extends Fragment {
 
@@ -65,11 +60,6 @@ public class BaseFragment extends Fragment {
         }
     }
 
-    public void onBtSearchClick(){
-        Log.e("onBtSearchClick: ", "sádads" );
-//        ((MainActivity) Objects.requireNonNull(getActivity())).onBtSearchClick();
-    }
-
     public void onBackPressd(){
         Objects.requireNonNull(getActivity()).onBackPressed();
 //        Log.e("onBackPre: ", "sfsfsfs" );
@@ -79,4 +69,5 @@ public class BaseFragment extends Fragment {
     public void refreshView() {
 
     }
+
 }

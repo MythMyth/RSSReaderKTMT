@@ -25,7 +25,6 @@ import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import ktmt.rssreader.Data.DataManager;
 import ktmt.rssreader.Data.NewsItem;
-import ktmt.rssreader.GlideModule.GlideApp;
 import ktmt.rssreader.Helper.Helper;
 import ktmt.rssreader.R;
 
