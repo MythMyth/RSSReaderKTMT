@@ -1,6 +1,5 @@
-﻿package ktmt.rssreader.fragments;
+package ktmt.rssreader.fragments;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,8 +9,6 @@ import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -20,7 +17,6 @@ import ktmt.rssreader.Asysntask.GetBodyNewsAsysn;
 import ktmt.rssreader.Data.DataManager;
 import ktmt.rssreader.Data.NewsItem;
 import ktmt.rssreader.GlideModule.GlideApp;
-import ktmt.rssreader.Data.LocalData;
 import ktmt.rssreader.FacebookActivity;
 import ktmt.rssreader.R;
 
@@ -53,20 +49,20 @@ public class DetailNewsFragment extends BaseFragment {
 
     @Override
     void initView(View view) {
-        tvTitle.setText("Tin tức");
+        tvTitle.setText("Tin t?c");
         settingWebView();
         setUpButton(view,new int[]{R.id.btBack,R.id.btLove}, new int[]{});
         GetBodyNewsAsysn bodyNewsAsysn = new GetBodyNewsAsysn(webView);
         bodyNewsAsysn.execute(newsItem.link,String.valueOf(webID));
     }
-
-    @SuppressLint("SetJavaScriptEnabled")
+/*
+    @SuppressLint("SetJavaScriptEnabled"){
         setUpButton(view,new int[]{R.id.btBack,R.id.btLove, R.id.btShare}, new int[]{});
         GetBodyNewsAsysn bodyNewsAsysn = new GetBodyNewsAsysn(webView);
         bodyNewsAsysn.execute(newsItem.link,String.valueOf(webID));
         LocalData.currentLink = newsItem.link;
     }
-
+    */
     private void settingWebView() {
         WebSettings settings = webView.getSettings();
         settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
@@ -105,10 +101,6 @@ public class DetailNewsFragment extends BaseFragment {
         }
     }
 
-            //GlideApp.with(this).load(R.drawable.ic_love_selected).into(btLove);
-            Glide.with(this).load(R.drawable.ic_love_selected).into(btLove);
-        }
-    }
 
     @OnClick(R.id.btShare)
     public void onShareButtonClick() {
