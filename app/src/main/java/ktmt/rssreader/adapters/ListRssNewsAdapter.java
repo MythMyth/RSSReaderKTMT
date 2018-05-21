@@ -25,6 +25,7 @@ import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import ktmt.rssreader.Data.DataManager;
 import ktmt.rssreader.Data.NewsItem;
+import ktmt.rssreader.GlideModule.GlideApp;
 import ktmt.rssreader.Helper.Helper;
 import ktmt.rssreader.R;
 
@@ -150,7 +151,7 @@ public class ListRssNewsAdapter extends RecyclerView.Adapter<ListRssNewsAdapter.
 
         public void deleteBookMark() {
             if(isBookmarked) {
-                DataManager.deleteData(DataManager.BOOKMARK_LIST, (Activity) Objects.requireNonNull(itemView.getContext()), getAdapterPosition());
+                DataManager.deleteData(DataManager.BOOKMARK_LIST, (Activity) Objects.requireNonNull(itemView.getContext()), newsItems.get(getAdapterPosition()).link);
             }
         }
 

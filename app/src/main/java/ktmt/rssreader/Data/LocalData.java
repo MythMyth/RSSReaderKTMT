@@ -1,5 +1,8 @@
 package ktmt.rssreader.Data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class LocalData {
     public static int isHomeChangeFragment = 0;
     public static int isFirstAccessApp = 0;

@@ -60,21 +60,29 @@ public class DataManager {
                 c.put("time", item.time.getTime());
             c.put("link", item.link);
             c.put("imageLink", item.getImageLink());
+            c.put("webID", webId);
+            c.put("channelID", channelID);
+            Log.e("====Update webid=======", String.valueOf(item.webId));
             db.insert("DB", "", c);
         }
     }
 
     public static ArrayList<NewsItem> GetNewsData(int webId, int channelId) {
         ArrayList<NewsItem> list = new ArrayList<>();
-        Cursor c = db.rawQuery("SELECT * FROM DB WHERE webID = " + webId + " AND channelID = " + channelId +";", null);
-        if(c.getCount()==0)
+        Cursor c = db.rawQuery("SELECT * FROM DB WHERE webID = " + webId +" AND channelID = " + channelId + ";", null);
+        if(c.getCount()==0) {
+            Log.e("Data Manager", "count == 0");
             return list;
+        }
+
+        Log.e("Data Manager", String.valueOf(c.getCount()));
         c.moveToFirst();
         int titleIndex = c.getColumnIndex("title");
         int contentIndex = c.getColumnIndex("content");
         int timeIndex = c.getColumnIndex("time");
         int linkIndex = c.getColumnIndex("link");
         int imageLinkIndex = c.getColumnIndex("imageLink");
+
         do {
             NewsItem item = new NewsItem();
             item.title = c.getString(titleIndex);
@@ -89,13 +97,14 @@ public class DataManager {
     }
 
 
-    public static ArrayList<NewsItem> SearchData(int webId, int channelId, String searchString)
+    public static ArrayList<NewsItem> SearchData(String searchString)
     {
         ArrayList<NewsItem> list = new ArrayList<>();
         String mutatedSearchString = searchString.trim().replace(" ", "%");
         mutatedSearchString = mutatedSearchString.replace("'", "");
         mutatedSearchString = mutatedSearchString.replace("\"", "");
         mutatedSearchString = mutatedSearchString.replace("\'", "");
+
         Cursor c = db.rawQuery("SELECT * FROM DB WHERE" + " (title LIKE '%" + mutatedSearchString + "%' OR content LIKE '%" + mutatedSearchString +"%') COLLATE NOCASE;", null);
         if(c.getCount()==0)
             return list;
@@ -105,9 +114,12 @@ public class DataManager {
         int timeIndex = c.getColumnIndex("time");
         int linkIndex = c.getColumnIndex("link");
         int imageLinkIndex = c.getColumnIndex("imageLink");
+        int webid = c.getColumnIndex("webID");
         do {
             NewsItem item = new NewsItem();
             item.title = c.getString(titleIndex);
+            item.webId = c.getInt(webid);
+            Log.e("====Search webid=======", String.valueOf(item.webId));
             item.des = c.getString(contentIndex);
             item.link = c.getString(linkIndex);
             item.time = new Date(c.getLong(timeIndex));
@@ -171,6 +183,21 @@ public class DataManager {
         addItem(typeData, activity, null);
     }
 
+    public static void deleteData(String typeData, Activity activity, String link) {
+        switch (typeData) {
+            case LOVE_LIST:
+                listLoves.remove(link);
+                break;
+            case BOOKMARK_LIST:
+                listBookmarks.remove(link);
+                break;
+            case HISTORY_LIST:
+                listHistorys.remove(link);
+                break;
+        }
+        addItem(typeData, activity, null);
+    }
+
     public static ListNewsItem getData(String typeData, Activity activity) {
         SharedPreferences mPrefs = activity.getPreferences(MODE_PRIVATE);
         Gson gson = new Gson();
@@ -220,7 +247,7 @@ public class DataManager {
     @RequiresApi(api = Build.VERSION_CODES.N)
     public static void deleteFromList(String whatList, Activity activity) {
         Log.e("deleteFromList: ", whatList );
-        listDelete.sort(Collections.reverseOrder());
+        sort(listDelete);
         switch (whatList){
             case LOVE_LIST:
                 for (int i = 0; i < listDelete.size(); i++) {
@@ -240,5 +267,22 @@ public class DataManager {
                 break;
         }
         resetDelete();
+    }
+
+    private static void sort(List<Integer> listDelete) {
+        for (int i = 0; i < listDelete.size(); i++) {
+            for (int j = i+1; j < listDelete.size(); j++) {
+                if(listDelete.get(i)<listDelete.get(j)){
+                    swap(listDelete,i,j);
+                }
+            }
+        }
+    }
+
+    private static void swap(List<Integer> list, int i, int j){
+        int flag;
+        flag = list.get(i);
+        list.set(i, list.get(j));
+        list.set(j, flag);
     }
 }

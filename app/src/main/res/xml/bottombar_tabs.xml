@@ -21,4 +21,5 @@
         icon="@drawable/ic_love"
         id="@+id/tab_love"
         title="" />
+
 </tabs>

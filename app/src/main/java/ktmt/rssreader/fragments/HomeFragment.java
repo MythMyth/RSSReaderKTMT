@@ -2,6 +2,8 @@ package ktmt.rssreader.fragments;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -9,6 +11,9 @@ import android.widget.ImageView;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import ktmt.rssreader.Data.Link;
+import ktmt.rssreader.Data.LocalData;
+import ktmt.rssreader.adapters.ListTitlePagerAdapter;
 import ktmt.rssreader.R;
 
 import static ktmt.rssreader.Data.Link.ID_24H;
@@ -65,7 +70,14 @@ public class HomeFragment extends BaseFragment {
     @OnClick(R.id.btRenew)
     public void onBtRenewClick() {
         LocalData.initLocalData();
-        onBt24hClick();
+        if(btVnxpress.isSelected())
+        {
+            changeFragment(ID_VNXPRESS);
+        }
+        else
+        {
+            changeFragment(ID_24H);
+        }
     }
 
     @SuppressLint("CommitTransaction")

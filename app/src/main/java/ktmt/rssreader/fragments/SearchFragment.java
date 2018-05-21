@@ -1,5 +1,6 @@
 package ktmt.rssreader.fragments;
 
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -7,6 +8,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -18,6 +22,8 @@ import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import butterknife.OnFocusChange;
+import butterknife.OnTouch;
 import ktmt.rssreader.Data.DataManager;
 import ktmt.rssreader.Data.NewsItem;
 import ktmt.rssreader.MainActivity;
@@ -72,6 +78,8 @@ public class SearchFragment extends BaseFragment implements ListRssNewsAdapter.o
     @OnClick(R.id.s_btOK)
     public void onOkButtonSearchClick() {
         String patternString = s_sdtSearch.getText().toString();
+        if(patternString == null)
+            patternString = "";
         Log.e("debug", patternString);
         newsItems = DataManager.SearchData(patternString);
         for(NewsItem ni : newsItems) {
@@ -93,9 +101,8 @@ public class SearchFragment extends BaseFragment implements ListRssNewsAdapter.o
     void initView(View view) {
         Log.e("Search View Init", "run");
         tvTitle.setText("Tìm kiếm");
-        Log.e("Edit Text Search:", String.valueOf(s_sdtSearch.getFocusable()));
         s_sdtSearch.requestFocus();
-        setUpButton(view, new int[]{R.id.btBack, R.id.btRecycleBin}, new int[]{R.id.btCheck, R.id.btClose});
+        setUpButton(view, new int[]{R.id.btBack, R.id.btRecycleBin}, new int[]{R.id.btCheck,R.id.btClose});
     }
 
     @OnClick(R.id.btBack)

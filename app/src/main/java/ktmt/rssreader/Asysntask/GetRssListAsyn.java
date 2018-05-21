@@ -9,6 +9,8 @@ import java.util.List;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import ktmt.rssreader.Data.DataManager;
+import ktmt.rssreader.Data.LocalData;
 import ktmt.rssreader.Data.NewsItem;
 import ktmt.rssreader.Data.RSS24Parser;
 import ktmt.rssreader.Data.RSSReceiver;
@@ -21,9 +23,13 @@ public class GetRssListAsyn extends AsyncTask<String, Void , Void> {
 
     private List<NewsItem> newsItems = new ArrayList<>();
     private int webID;
+    private int channelID;
+    CallBackAsyn delegate;
 
-    public GetRssListAsyn(int webID) {
+    public GetRssListAsyn(int webID, int channelID, CallBackAsyn delegate) {
         this.webID = webID;
+        this.channelID = channelID;
+        this.delegate = delegate;
     }
 
     @Override
@@ -52,7 +58,14 @@ public class GetRssListAsyn extends AsyncTask<String, Void , Void> {
         return null;
     }
 
-    public List<NewsItem> getNewsItems() {
-        return newsItems;
+    @Override
+    protected void onPostExecute(Void aVoid) {
+
+        DataManager.UpdateNews(webID, channelID, new ArrayList<>(newsItems));
+        LocalData.listNewItems[webID][channelID].setNewsItems((ArrayList) newsItems);
+        if(delegate != null)
+        {
+            delegate.doneLoadData();
+        }
     }
 }

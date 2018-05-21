@@ -20,4 +20,12 @@ public class ListNewsItem {
     public void remove(int position) {
         newsItems.remove(position);
     }
+
+    public void remove(String link) {
+        for (int i = 0; i < newsItems.size(); i++) {
+            if(newsItems.get(i).link.equals(link)){
+                newsItems.remove(i);
+            }
+        }
+    }
 }

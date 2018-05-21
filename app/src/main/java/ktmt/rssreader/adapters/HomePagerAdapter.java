@@ -3,6 +3,7 @@ package ktmt.rssreader.adapters;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,7 @@ public class HomePagerAdapter extends FragmentStatePagerAdapter {
 
     public HomePagerAdapter(FragmentManager fm) {
         super(fm);
+        Log.e("Home Page Adapter", "----------------------------------------------------------------------------");
         fragments.add(SearchFragment.newInstance());
         fragments.add(HistoryFragment.newInstance());
         fragments.add(HomeFragment.newInstance());

@@ -5,12 +5,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import butterknife.BindView;
+import ktmt.rssreader.Asysntask.CallBackAsyn;
 import ktmt.rssreader.Data.DataManager;
 import ktmt.rssreader.Data.LocalData;
 import ktmt.rssreader.Data.NewsItem;
@@ -19,7 +21,7 @@ import ktmt.rssreader.MainActivity;
 import ktmt.rssreader.R;
 import ktmt.rssreader.adapters.ListRssNewsAdapter;
 
-public class ListNewsFragment extends BaseFragment implements ListRssNewsAdapter.onClickItemListener {
+public class ListNewsFragment extends BaseFragment implements ListRssNewsAdapter.onClickItemListener , CallBackAsyn{
 
     @BindView(R.id.rcvRssList)
     RecyclerView rcvRssList;
@@ -47,31 +49,42 @@ public class ListNewsFragment extends BaseFragment implements ListRssNewsAdapter
     void onViewAppear() {
 
     }
-
+/*
     private void getData() {
-        Log.e("getData: ", String.valueOf(webId) +" "+ String.valueOf(position) );
+        Log.e("getData: ",String.valueOf(webId) +" "+ String.valueOf(position) );
         if (LocalData.listNewItems[webId][position] == null) {
             Log.e("Get data", "0");
         }
         else if (LocalData.listNewItems[webId][position].getNewsItems().size() == 0) {
             Log.e("Get data", "1");
-            newsItems = RSS.getRSSList(webId, position);
+            RSS.getRSSList(webId, position, this);
             LocalData.listNewItems[webId][position].setNewsItems((ArrayList) newsItems);
         }
         else {
             Log.e("Get data", "2");
-            newsItems = LocalData.listNewItems[webId][position].getNewsItems();
+            doneLoadData();
         }
 
-        listRssNewsAdapter.setNewsItems(newsItems);
         listRssNewsAdapter.setOnClickItemListener(this);
+    }
+    */
+
+    private void getData() {
+        doneLoadData();
+        listRssNewsAdapter.setOnClickItemListener(this);
+        RSS.getRSSList(webId, position, this);
     }
 
     @Override
     void initView(View view) {
         Log.e("List new Fragment", "------------ init view ----------------");
-        getData();
         setUpRecycleView();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getData();
     }
 
     private void setUpRecycleView() {
@@ -94,4 +107,16 @@ public class ListNewsFragment extends BaseFragment implements ListRssNewsAdapter
         ((MainActivity) Objects.requireNonNull(getActivity())).changeFragment(DetailNewsFragment.newInstance(newsItems.get(position),webId));
         DataManager.addItem(DataManager.HISTORY_LIST, Objects.requireNonNull(getActivity()), newsItems.get(position));
     }
+
+    @Override
+    public void doneLoadData() {
+        newsItems = DataManager.GetNewsData(webId, position);
+        listRssNewsAdapter.setNewsItems(newsItems);
+    }
+/*
+    public void doneLoadData(){
+        newsItems = LocalData.listNewItems[webId][position].getNewsItems();
+        listRssNewsAdapter.setNewsItems(newsItems);
+    }
+    */
 }

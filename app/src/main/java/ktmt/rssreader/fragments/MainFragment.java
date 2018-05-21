@@ -1,9 +1,11 @@
 package ktmt.rssreader.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
@@ -11,6 +13,7 @@ import com.roughike.bottombar.OnTabSelectListener;
 import java.util.Objects;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 import ktmt.rssreader.R;
 import ktmt.rssreader.adapters.HomePagerAdapter;
 
@@ -94,6 +97,12 @@ public class MainFragment extends BaseFragment implements OnTabSelectListener {
             case R.id.tab_bookmark:
                 currentTab = 3;
                 break;
+        }
+        View view = getActivity().getCurrentFocus();
+        if(view != null)
+        {
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
         viewPager.setCurrentItem(currentTab, false);
 //        updateTitle();

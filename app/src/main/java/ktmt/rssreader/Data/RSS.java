@@ -14,6 +14,7 @@ import java.io.InputStreamReader;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import ktmt.rssreader.Asysntask.CallBackAsyn;
 import ktmt.rssreader.Asysntask.GetRssListAsyn;
 
 /**
@@ -52,10 +53,10 @@ public class RSS {
             }
         }).start();
     }
-
+    /*
     public static List<NewsItem> getRSSList(final int webId, final int channelId) {
         String link = Link.getLink(webId, channelId);
-        GetRssListAsyn getRssListAsyn = new GetRssListAsyn(webId);
+        GetRssListAsyn getRssListAsyn = new GetRssListAsyn(webId, channelId);
         try {
             getRssListAsyn.execute(link).get();
         } catch (InterruptedException | ExecutionException e) {
@@ -66,7 +67,16 @@ public class RSS {
                 ) {
             newsItem.webId = webId;
         }
-        DataManager.UpdateNews(webId, channelId, new ArrayList<>(newsItems));
         return newsItems;
+    }*/
+
+    public static void getRSSList(final int webId, final int channelId, CallBackAsyn delegate) {
+        String link = Link.getLink(webId, channelId);
+        GetRssListAsyn getRssListAsyn = new GetRssListAsyn(webId, channelId, delegate);
+        try {
+            getRssListAsyn.execute(link);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

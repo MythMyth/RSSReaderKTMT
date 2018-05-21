@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,6 +23,7 @@ import ktmt.rssreader.MainActivity;
 import ktmt.rssreader.R;
 import ktmt.rssreader.adapters.ListRssNewsAdapter;
 
+import static ktmt.rssreader.Data.DataManager.BOOKMARK_LIST;
 import static ktmt.rssreader.Data.DataManager.HISTORY_LIST;
 
 public class HistoryFragment extends BaseFragment implements ListRssNewsAdapter.onClickItemListener{
@@ -58,7 +60,7 @@ public class HistoryFragment extends BaseFragment implements ListRssNewsAdapter.
     void initView(View view) {
         tvTitle.setText("Lịch sử");
         Log.e("initView: ", "historyFrag" );
-        setUpButton(view, new int[]{R.id.btBack, R.id.btRecycleBin}, new int[]{R.id.btCheck, R.id.btClose});
+        setUpButton(view, new int[]{R.id.btBack, R.id.btRecycleBin}, new int[]{R.id.btCheck,R.id.btClose});
     }
 
     @Override
@@ -105,7 +107,7 @@ public class HistoryFragment extends BaseFragment implements ListRssNewsAdapter.
     public void onBtRecycleBinClick(){
         isDeleMode = true;
         listRssNewsAdapter.setIsDelete(true);
-        setUpButton(this.getView(), new int[]{R.id.btCheck, R.id.btClose}, new int[]{R.id.btBack, R.id.btRecycleBin});
+        setUpButton(this.getView(), new int[]{R.id.btCheck,R.id.btClose}, new int[]{R.id.btBack, R.id.btRecycleBin});
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -113,7 +115,7 @@ public class HistoryFragment extends BaseFragment implements ListRssNewsAdapter.
     public void onAcceptDelete(){
         isDeleMode = false;
         DataManager.deleteFromList(HISTORY_LIST,getActivity());
-        setUpButton(this.getView(), new int[]{R.id.btBack, R.id.btRecycleBin}, new int[]{R.id.btCheck, R.id.btClose});
+        setUpButton(this.getView(), new int[]{R.id.btBack, R.id.btRecycleBin}, new int[]{R.id.btCheck,R.id.btClose});
         refreshView();
         listRssNewsAdapter.setIsDelete(false);
     }
@@ -123,6 +125,6 @@ public class HistoryFragment extends BaseFragment implements ListRssNewsAdapter.
         isDeleMode = false;
         DataManager.resetDelete();
         listRssNewsAdapter.setIsDelete(false);
-        setUpButton(this.getView(), new int[]{R.id.btBack,  R.id.btRecycleBin}, new int[]{R.id.btCheck, R.id.btClose});
+        setUpButton(this.getView(), new int[]{R.id.btBack,  R.id.btRecycleBin}, new int[]{R.id.btCheck,R.id.btClose});
     }
 }

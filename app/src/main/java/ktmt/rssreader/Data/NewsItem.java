@@ -13,6 +13,7 @@ public class NewsItem {
     public String des;
     public Date time;
     public int webId;
+    public int channelId;
 
     public NewsItem() {
         title = "";

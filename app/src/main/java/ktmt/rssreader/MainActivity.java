@@ -14,6 +14,7 @@ import com.roughike.bottombar.OnTabSelectListener;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ktmt.rssreader.Data.DataManager;
+import ktmt.rssreader.Data.LocalData;
 import ktmt.rssreader.Data.NewsItem;
 import ktmt.rssreader.Data.RSS;
 import ktmt.rssreader.adapters.HomePagerAdapter;
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity{
 //        receive.getRSS(0, 0);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        LocalData.initLocalData();
         DataManager.getData(this);
         changeFragment(MainFragment.newInstance());
     }
