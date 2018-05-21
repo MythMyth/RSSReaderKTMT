@@ -279,10 +279,13 @@ public class DataManager {
         }
     }
 
-    private static void swap(List<Integer> list, int i, int j){
+    private static void swap(List<Integer> list, int i, int j) {
         int flag;
         flag = list.get(i);
         list.set(i, list.get(j));
         list.set(j, flag);
+    }
+    public static void removeItemDelete(int position) {
+        listDelete.remove(Integer.valueOf(position));
     }
 }

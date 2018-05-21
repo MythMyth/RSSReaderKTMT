@@ -28,6 +28,7 @@ public class HomeFragment extends BaseFragment {
     Button bt24h;
     @BindView(R.id.btRenew)
     ImageView btRenew;
+    private PagersNewsFragment pagersNewsFragment;
 
     public static HomeFragment newInstance() {
         Bundle args = new Bundle();
@@ -82,10 +83,15 @@ public class HomeFragment extends BaseFragment {
 
     @SuppressLint("CommitTransaction")
     private void changeFragment(int webId) {
-        Log.e("Home fragment", "---------- change fragment ---------");
+        pagersNewsFragment = PagersNewsFragment.newInstance(webId);
         getChildFragmentManager()
                 .beginTransaction()
-                .replace(R.id.containerHome, PagersNewsFragment.newInstance(webId), null)
+                .replace(R.id.containerHome, pagersNewsFragment, null)
                 .commitAllowingStateLoss();
+    }
+
+    @Override
+    public boolean isKeepFragment() {
+        return true;
     }
 }

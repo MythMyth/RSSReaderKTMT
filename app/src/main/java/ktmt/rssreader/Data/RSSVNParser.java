@@ -60,7 +60,7 @@ public class RSSVNParser extends DefaultHandler {
             try {
                 newsList.get(newsList.size() - 1).des = descript.substring(descript.indexOf("</br>") + 5);
                 //String a;
-                if(descript.indexOf("data-original=")==-1) {
+                if(!descript.contains("data-original=")) {
                     //a = descript.substring(descript.indexOf("src=") + 5, descript.indexOf("></a>") - 2);
                     newsList.get(newsList.size() - 1).setImageLink(descript.substring(descript.indexOf("src=") + 5, descript.indexOf("></a>") - 2));
                 } else {

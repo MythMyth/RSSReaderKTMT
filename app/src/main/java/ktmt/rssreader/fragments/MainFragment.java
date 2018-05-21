@@ -57,6 +57,7 @@ public class MainFragment extends BaseFragment implements OnTabSelectListener {
                 setupBottomBar();
             }
         }, 100);
+        viewPager.setOffscreenPageLimit(5);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

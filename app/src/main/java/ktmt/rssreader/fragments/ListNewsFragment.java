@@ -119,4 +119,7 @@ public class ListNewsFragment extends BaseFragment implements ListRssNewsAdapter
         listRssNewsAdapter.setNewsItems(newsItems);
     }
     */
+    public boolean isKeepFragment() {
+        return true;
+    }
 }

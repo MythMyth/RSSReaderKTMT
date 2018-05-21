@@ -49,4 +49,9 @@ public class PagersNewsFragment extends BaseFragment {
         mAdapter.setTitles(Link.getTitles(webId));
         viewPager.setAdapter(mAdapter);
     }
+
+    @Override
+    public boolean isKeepFragment() {
+        return true;
+    }
 }

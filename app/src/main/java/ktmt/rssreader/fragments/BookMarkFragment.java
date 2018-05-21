@@ -60,6 +60,14 @@ public class BookMarkFragment extends BaseFragment implements ListRssNewsAdapter
     @Override
     void onViewAppear() {
         Log.e("onViewAppear: ", "bookmark");
+        refreshView();
+    }
+
+    @Override
+    void initView(View view) {
+        Log.e("initView: ", "bookmark");
+        tvTitle.setText("Đánh dấu");
+        setUpButton(view, new int[]{R.id.btBack, R.id.btRecycleBin}, new int[]{R.id.btCheck,R.id.btClose});
         newsItems = Objects.requireNonNull(DataManager.getData(BOOKMARK_LIST, Objects.requireNonNull(getActivity()))).getNewsItems();
         if (newsItems == null) {
             return;
@@ -70,12 +78,13 @@ public class BookMarkFragment extends BaseFragment implements ListRssNewsAdapter
         listRssNewsAdapter.setOnClickItemListener(this);
     }
 
-    @Override
+    /*@Override
     void initView(View view) {
         Log.e("initView: ", "bookmark");
         tvTitle.setText("Đánh dấu");
         setUpButton(view, new int[]{R.id.btBack, R.id.btRecycleBin}, new int[]{R.id.btCheck,R.id.btClose});
     }
+    */
 
     @Override
     public void onResume() {
@@ -106,6 +115,7 @@ public class BookMarkFragment extends BaseFragment implements ListRssNewsAdapter
         }
         newsItems = DataManager.getData(BOOKMARK_LIST, getActivity()).getNewsItems();
         listRssNewsAdapter.setNewsItems(newsItems);
+        listRssNewsAdapter.setIsDelete(false);
         isDeleMode = false;
 
     }
@@ -124,7 +134,6 @@ public class BookMarkFragment extends BaseFragment implements ListRssNewsAdapter
         DataManager.deleteFromList(BOOKMARK_LIST,getActivity());
         setUpButton(this.getView(), new int[]{R.id.btBack, R.id.btRecycleBin}, new int[]{R.id.btCheck,R.id.btClose});
         refreshView();
-        listRssNewsAdapter.setIsDelete(false);
     }
 
     @OnClick(R.id.btClose)
@@ -132,5 +141,6 @@ public class BookMarkFragment extends BaseFragment implements ListRssNewsAdapter
         DataManager.resetDelete();
         listRssNewsAdapter.setIsDelete(false);
         setUpButton(this.getView(), new int[]{R.id.btBack, R.id.btRecycleBin}, new int[]{R.id.btCheck,R.id.btClose});
+
     }
 }
