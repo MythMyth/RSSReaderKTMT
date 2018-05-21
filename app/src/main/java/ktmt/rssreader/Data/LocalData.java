@@ -5,6 +5,7 @@ import java.util.List;
 
 public class LocalData {
     public static int isHomeChangeFragment = 0;
+    public static String currentLink = "";
     public static int isFirstAccessApp = 0;
     public static int[][] isAccess = new int[3][25];
     public static ListNewsItem[][] listNewItems = new ListNewsItem[3][25];
