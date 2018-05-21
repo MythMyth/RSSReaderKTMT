@@ -1,10 +1,14 @@
 package ktmt.rssreader.fragments;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,6 +17,7 @@ import java.util.List;
 import java.util.Objects;
 
 import butterknife.BindView;
+import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import ktmt.rssreader.Data.DataManager;
 import ktmt.rssreader.Data.NewsItem;
@@ -20,8 +25,6 @@ import ktmt.rssreader.MainActivity;
 import ktmt.rssreader.R;
 import ktmt.rssreader.adapters.ListRssNewsAdapter;
 
-import static ktmt.rssreader.Data.DataManager.BOOKMARK_LIST;
-import static ktmt.rssreader.Data.DataManager.HISTORY_LIST;
 import static ktmt.rssreader.Data.DataManager.LOVE_LIST;
 
 public class LoveFragment extends BaseFragment implements ListRssNewsAdapter.onClickItemListener{
@@ -73,7 +76,7 @@ public class LoveFragment extends BaseFragment implements ListRssNewsAdapter.onC
     @Override
     void initView(View view) {
         tvTitle.setText("Yêu thích");
-        setUpButton(view, new int[]{R.id.btBack, R.id.btSearch, R.id.btRecycleBin}, new int[]{R.id.btCheck,R.id.btClose});
+        setUpButton(view, new int[]{R.id.btBack, R.id.btSearch, R.id.btRecycleBin}, new int[]{R.id.btCheck,R.id.btClose,R.id.cbCheckAll});
     }
 
     @OnClick(R.id.btSearch)
@@ -96,14 +99,13 @@ public class LoveFragment extends BaseFragment implements ListRssNewsAdapter.onC
     }
 
     @Override
-    public void refreshView() {
+    public void refreshView(FragmentActivity activity) {
         Log.e("refreshView: ", "bookmark");
-        if(getActivity() == null){
-            return;
-        }
-        newsItems = DataManager.getData(LOVE_LIST, getActivity()).getNewsItems();
+        newsItems = DataManager.getData(LOVE_LIST, activity).getNewsItems();
         listRssNewsAdapter.setNewsItems(newsItems);
         listRssNewsAdapter.setIsDelete(false);
+        cbCheckAll.setChecked(false);
+        listRssNewsAdapter.setIsCheckAll(false);
         isDeleMode = false;
         }
 
@@ -111,15 +113,16 @@ public class LoveFragment extends BaseFragment implements ListRssNewsAdapter.onC
     public void onBtRecycleBinClick(){
         isDeleMode = true;
         listRssNewsAdapter.setIsDelete(true);
-        setUpButton(this.getView(), new int[]{R.id.btCheck,R.id.btClose}, new int[]{R.id.btBack, R.id.btSearch, R.id.btRecycleBin});
+        setUpButton(this.getView(), new int[]{R.id.btCheck,R.id.btClose,R.id.cbCheckAll}, new int[]{R.id.btBack, R.id.btSearch, R.id.btRecycleBin});
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @OnClick(R.id.btCheck)
     public void onAcceptDelete(){
         isDeleMode = false;
         DataManager.deleteFromList(LOVE_LIST,getActivity());
-        setUpButton(this.getView(), new int[]{R.id.btBack, R.id.btSearch, R.id.btRecycleBin}, new int[]{R.id.btCheck,R.id.btClose});
-        refreshView();
+        setUpButton(this.getView(), new int[]{R.id.btBack, R.id.btSearch, R.id.btRecycleBin}, new int[]{R.id.btCheck,R.id.btClose,R.id.cbCheckAll});
+        refreshView(getActivity());
         listRssNewsAdapter.setIsDelete(false);
     }
 
@@ -128,6 +131,16 @@ public class LoveFragment extends BaseFragment implements ListRssNewsAdapter.onC
         isDeleMode = false;
         DataManager.resetDelete();
         listRssNewsAdapter.setIsDelete(false);
-        setUpButton(this.getView(), new int[]{R.id.btBack, R.id.btSearch, R.id.btRecycleBin}, new int[]{R.id.btCheck,R.id.btClose});
+        cbCheckAll.setChecked(false);
+        setUpButton(this.getView(), new int[]{R.id.btBack, R.id.btSearch, R.id.btRecycleBin}, new int[]{R.id.btCheck,R.id.btClose,R.id.cbCheckAll});
+    }
+
+    @BindView(R.id.cbCheckAll)
+    CheckBox cbCheckAll;
+    @OnCheckedChanged(R.id.cbCheckAll)
+    public void onChangeCheckAll(){
+        if(cbCheckAll.isChecked()) {
+            listRssNewsAdapter.setIsCheckAll(true);
+        }
     }
 }

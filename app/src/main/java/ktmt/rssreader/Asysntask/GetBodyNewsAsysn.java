@@ -58,14 +58,21 @@ public class GetBodyNewsAsysn extends AsyncTask<String, Void, String> {
     private String getBody24h(Document document) {
         Elements sub;
         sub = document.select("article.nwsHt");
-        if (sub == null) {
+        if (sub.size() == 0) {
             sub = document.select("article.clLtImg");
+            if(sub.size() == 0){
+                return document.body().toString();
+            }
         }
+        Log.e( "getBody24h: ", "dffdfd");
         return sub.get(0).toString();
     }
 
     private String getBodyVnxpress(Document document) {
         Element element = getElement(document);
+        if(element == null){
+            return document.body().toString();
+        }
         String time = document.select("header.clearfix").toString();
         String title = document.select("h1").get(0).toString();
         String description = document.select("h2.description").toString();
@@ -73,17 +80,22 @@ public class GetBodyNewsAsysn extends AsyncTask<String, Void, String> {
     }
 
     private Element getElement(Document document){
-        Elements elements = new Elements();
-        for (String aListCssQueryVn : listCssQueryVn) {
-            elements = document.select(aListCssQueryVn);
-            if(elements.size() >0) {
-                break;
+        try {
+            Elements elements = new Elements();
+            for (String aListCssQueryVn : listCssQueryVn) {
+                elements = document.select(aListCssQueryVn);
+                if (elements.size() > 0) {
+                    break;
+                }
             }
-        }
-        if(elements.get(0).getElementById("left_calculator") != null){
-            return elements.get(0).getElementById("left_calculator");
-        } else {
-            return elements.get(0);
+            if (elements.get(0).getElementById("left_calculator") != null) {
+                return elements.get(0).getElementById("left_calculator");
+            } else {
+                return elements.get(0);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+            return null;
         }
     }
 

@@ -9,15 +9,17 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+
+import ktmt.rssreader.fragments.ListNewsFragment;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -34,6 +36,7 @@ public class DataManager {
     public static final String HISTORY_LIST = "historyList";
     public static final String LOVE_LIST = "loveList";
     public static final String BOOKMARK_LIST = "bookmarkList";
+    public static boolean isHistorySoonToLate = true;
     public static SQLiteDatabase db;
 
     public static void dbInit(Context c) {
@@ -118,6 +121,40 @@ public class DataManager {
         return list;
     }
 
+    public static ArrayList<NewsItem> SearchData(String searchString)
+    {
+        ArrayList<NewsItem> list = new ArrayList<>();
+        String mutatedSearchString = searchString.trim().replace(" ", "%");
+        mutatedSearchString = mutatedSearchString.replace("'", "");
+        mutatedSearchString = mutatedSearchString.replace("\"", "");
+        mutatedSearchString = mutatedSearchString.replace("\'", "");
+
+        Cursor c = db.rawQuery("SELECT * FROM DB WHERE" + " (title LIKE '%" + mutatedSearchString + "%' OR content LIKE '%" + mutatedSearchString +"%') COLLATE NOCASE;", null);
+        if(c.getCount()==0)
+            return list;
+        c.moveToFirst();
+        int titleIndex = c.getColumnIndex("title");
+        int contentIndex = c.getColumnIndex("content");
+        int timeIndex = c.getColumnIndex("time");
+        int linkIndex = c.getColumnIndex("link");
+        int imageLinkIndex = c.getColumnIndex("imageLink");
+        int webid = c.getColumnIndex("webID");
+        do {
+            NewsItem item = new NewsItem();
+            item.title = c.getString(titleIndex);
+            item.webId = c.getInt(webid);
+            Log.e("====Search webid=======", String.valueOf(item.webId));
+            item.des = c.getString(contentIndex);
+            item.link = c.getString(linkIndex);
+            item.time = new Date(c.getLong(timeIndex));
+            item.setImageLink(c.getString(imageLinkIndex));
+            list.add(item);
+        }
+        while(c.moveToNext());
+
+        return list;
+    }
+
     public static void addItem(String typeData, Activity activity, NewsItem newsItem){
         SharedPreferences  mPrefs = activity.getPreferences(MODE_PRIVATE);
         SharedPreferences.Editor prefsEditor = mPrefs.edit();
@@ -130,7 +167,7 @@ public class DataManager {
                 json = saveList(newsItem, listBookmarks);
                 break;
             case HISTORY_LIST:
-                json = saveList(newsItem, listHistorys);
+                json = saveHistoryList(newsItem);
                 break;
         }
         assert json != null;
@@ -139,6 +176,25 @@ public class DataManager {
         }
         prefsEditor.putString(typeData, json);
         prefsEditor.apply();
+    }
+
+    private static String saveHistoryList(NewsItem newsItem) {
+            if (newsItem != null) {
+                for (NewsItem item : listHistorys.getNewsItems()
+                        ) {
+                    if (item.link.equals(newsItem.link)) {
+                        return "";
+                    }
+                }
+                if(isHistorySoonToLate) {
+                    listHistorys.addItem(newsItem, 0);
+                }
+                else {
+                    listHistorys.addItem(newsItem, listHistorys.getNewsItems().size());
+                }
+            }
+            Log.e( "saveList: ","fdfdf" );
+        return (new Gson()).toJson(listHistorys);
     }
 
     private static String saveList(NewsItem newsItem, ListNewsItem listNewsItem) {
@@ -153,6 +209,21 @@ public class DataManager {
         }
         Log.e( "saveList: ","fdfdf" );
         return (new Gson()).toJson(listNewsItem);
+    }
+
+    public static void deleteData(String typeData, Activity activity, NewsItem newsItem) {
+        switch (typeData) {
+            case LOVE_LIST:
+                listLoves.remove(newsItem);
+                break;
+            case BOOKMARK_LIST:
+                listBookmarks.remove(newsItem);
+                break;
+            case HISTORY_LIST:
+                listHistorys.remove(newsItem);
+                break;
+        }
+        addItem(typeData, activity, null);
     }
 
     public static void deleteData(String typeData, Activity activity, int position) {
@@ -243,5 +314,21 @@ public class DataManager {
 
     public static void removeItemDelete(int position) {
         listDelete.remove(Integer.valueOf(position));
+    }
+
+    public static void addAllItemDelete(int size) {
+        for (int i = 0; i < size; i++) {
+            listDelete.add(i);
+        }
+    }
+
+    public static void reverseListHistory(Activity activity) {
+        isHistorySoonToLate = !isHistorySoonToLate;
+        ArrayList<NewsItem> newsItems = new ArrayList<>();
+        for (int i = listHistorys.getNewsItems().size()-1; i >-1; i--) {
+            newsItems.add(listHistorys.getNewsItems().get(i));
+        }
+        listHistorys.setNewsItems(newsItems);
+        addItem(HISTORY_LIST,activity,null);
     }
 }

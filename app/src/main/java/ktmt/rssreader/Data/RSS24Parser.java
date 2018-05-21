@@ -61,8 +61,8 @@ public class RSS24Parser extends DefaultHandler {
         } else if (tabName.equalsIgnoreCase("img")) {
             String des = new String(ch, start, length);
             try {
-                des = des.replace("&#34;","\"");
                 newsList.get(newsList.size() - 1).des = newsList.get(newsList.size() - 1).des + des;
+                newsList.get(newsList.size() - 1).des = newsList.get(newsList.size() - 1).des.replace("&amp;#34;","\"");
             } catch (Exception e) {
                 Log.e("Error", "");
             }

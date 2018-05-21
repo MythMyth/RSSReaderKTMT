@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/padding_normal">
+
+    <ImageView
+        android:id="@+id/btnSearch"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="@dimen/margin_normal"
+        android:padding="@dimen/padding_small"
+        android:src="@drawable/ic_search_screen_search" />
+
+    <EditText
+        android:id="@+id/edtSearch"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center"
+        android:layout_marginEnd="@dimen/padding_normal"
+        android:layout_marginStart="@dimen/padding_normal"
+        android:layout_toEndOf="@id/btnSearch"
+        android:background="@drawable/bg_search"
+        android:gravity="center_vertical"
+        android:hint="@string/search"
+        android:textColor="@color/text_dark"
+        android:textColorHint="@color/text_gray"
+        android:paddingBottom="@dimen/padding_small"
+        android:paddingStart="@dimen/padding_big"
+        android:paddingTop="@dimen/padding_small"
+        android:paddingEnd="@dimen/padding_normal"
+        android:textSize="@dimen/text_size_normal"
+        tools:ignore="RtlSymmetry" />
+</RelativeLayout>

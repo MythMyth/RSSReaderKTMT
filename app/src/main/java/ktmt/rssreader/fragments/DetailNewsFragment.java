@@ -1,6 +1,7 @@
 package ktmt.rssreader.fragments;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.Objects;
+import java.util.concurrent.ExecutionException;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -50,9 +52,16 @@ public class DetailNewsFragment extends BaseFragment {
     void initView(View view) {
         tvTitle.setText("Tin tức");
         settingWebView();
-        setUpButton(view,new int[]{R.id.btBack,R.id.btLove}, new int[]{});
+        setUpButton(view,new int[]{R.id.btShare,R.id.btBack,R.id.btLove}, new int[]{});
         GetBodyNewsAsysn bodyNewsAsysn = new GetBodyNewsAsysn(webView);
-        bodyNewsAsysn.execute(newsItem.link,String.valueOf(webID));
+        try {
+            haveProgressBar(true);
+            bodyNewsAsysn.execute(newsItem.link,String.valueOf(webID)).get();
+            haveProgressBar(false);
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            haveProgressBar(false);
+        }
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -65,7 +74,7 @@ public class DetailNewsFragment extends BaseFragment {
         settings.setLoadWithOverviewMode(true);
         settings.setUseWideViewPort(true);
         settings.setSupportZoom(true);
-        settings.setMinimumFontSize(24);
+        settings.setDefaultFontSize(28);
     }
 
     public void setNewsItem(NewsItem newsItem) {
@@ -92,6 +101,15 @@ public class DetailNewsFragment extends BaseFragment {
             DataManager.addItem(DataManager.LOVE_LIST, Objects.requireNonNull(getActivity()), newsItem);
             GlideApp.with(this).load(R.drawable.ic_love_selected).into(btLove);
         }
+    }
+
+    @OnClick(R.id.btShare)
+    public void onBtShareClick(){
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        String shareBody = newsItem.link;
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+        startActivity(Intent.createChooser(sharingIntent, "Share via"));
     }
 
 }

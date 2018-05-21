@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">RSSReader</string>
+    <string name="search">Search đi nào</string>
+    <string name="text_cant_search">Không có kết quả nào như ý bạn</string>
 </resources>

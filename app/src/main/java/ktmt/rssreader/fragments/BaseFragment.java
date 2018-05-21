@@ -1,23 +1,41 @@
 package ktmt.rssreader.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import java.util.Objects;
 
 import butterknife.ButterKnife;
-import butterknife.OnClick;
+import ktmt.rssreader.AppConstant;
 import ktmt.rssreader.MainActivity;
-import ktmt.rssreader.R;
 
 public class BaseFragment extends Fragment {
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        AppConstant.getBus().register(this);
+    }
+
+    @Override
+    public void onDetach() {
+        AppConstant.getBus().unregister(this);
+        super.onDetach();
+    }
+
+    @Override
+    public void onAttachFragment(Fragment childFragment) {
+        Log.e("onAttachFragment: ","fdgf" );
+        super.onAttachFragment(childFragment);
+    }
 
     private View view;
     private boolean isFirstTime = true;
@@ -82,7 +100,7 @@ public class BaseFragment extends Fragment {
 
     public void onBtSearchClick(){
         Log.e("onBtSearchClick: ", "sádads" );
-//        ((MainActivity) Objects.requireNonNull(getActivity())).onBtSearchClick();
+        ((MainActivity) Objects.requireNonNull(getActivity())).onBtSearchClick();
     }
 
     public void onBackPressd(){
@@ -91,11 +109,18 @@ public class BaseFragment extends Fragment {
 //        ((MainActivity) Objects.requireNonNull(getActivity())).getSupportFragmentManager().popBackStack();
     }
 
-    public void refreshView() {
+    public void refreshView(FragmentActivity activity) {
 
     }
 
     public boolean isKeepFragment(){
         return false;
+    }
+
+    public void haveProgressBar(boolean haveProgressBar){
+        if(getActivity() == null){
+            return;
+        }
+        ((MainActivity) Objects.requireNonNull(getActivity())).haveProgressbar(haveProgressBar);
     }
 }

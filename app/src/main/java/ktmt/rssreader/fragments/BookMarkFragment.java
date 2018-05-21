@@ -4,10 +4,12 @@ import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,8 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import butterknife.BindInt;
 import butterknife.BindView;
+import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import ktmt.rssreader.Data.DataManager;
 import ktmt.rssreader.Data.NewsItem;
@@ -60,21 +62,22 @@ public class BookMarkFragment extends BaseFragment implements ListRssNewsAdapter
 
     @Override
     void onViewAppear() {
-        Log.e("onViewAppear: ", "bookmark");
-        refreshView();
+//        Log.e("onViewAppear: ", "bookmark");
+//        refreshView(getActivity());
     }
 
     @Override
     void initView(View view) {
         Log.e("initView: ", "bookmark");
         tvTitle.setText("Đánh dấu");
-        setUpButton(view, new int[]{R.id.btBack, R.id.btSearch, R.id.btRecycleBin}, new int[]{R.id.btCheck,R.id.btClose});
+        setUpButton(view, new int[]{R.id.btBack, R.id.btSearch, R.id.btRecycleBin}, new int[]{R.id.btCheck, R.id.btClose, R.id.cbCheckAll});
         newsItems = Objects.requireNonNull(DataManager.getData(BOOKMARK_LIST, Objects.requireNonNull(getActivity()))).getNewsItems();
         if (newsItems == null) {
             return;
         }
         rcvBookmark.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         rcvBookmark.setAdapter(listRssNewsAdapter);
+        listRssNewsAdapter.setBookmarkable(false);
         listRssNewsAdapter.setNewsItems(newsItems);
         listRssNewsAdapter.setOnClickItemListener(this);
     }
@@ -99,45 +102,58 @@ public class BookMarkFragment extends BaseFragment implements ListRssNewsAdapter
 
     @Override
     public void onClickItem(int position) {
-        if(!isDeleMode) {
+        if (!isDeleMode) {
             ((MainActivity) Objects.requireNonNull(getActivity())).changeFragment(DetailNewsFragment.newInstance(newsItems.get(position), newsItems.get(position).webId));
             DataManager.addItem(DataManager.HISTORY_LIST, Objects.requireNonNull(getActivity()), newsItems.get(position));
         }
     }
 
     @Override
-    public void refreshView() {
+    public void refreshView(FragmentActivity activity) {
         Log.e("refreshView: ", "bookmark");
-        if(getActivity() == null){
-            return;
-        }
-        newsItems = DataManager.getData(BOOKMARK_LIST, getActivity()).getNewsItems();
+        DataManager.listDelete.clear();
+        setUpButton(this.getView(), new int[]{R.id.btBack, R.id.btSearch, R.id.btRecycleBin}, new int[]{R.id.btCheck, R.id.btClose, R.id.cbCheckAll});
+        newsItems = DataManager.getData(BOOKMARK_LIST, activity).getNewsItems();
         listRssNewsAdapter.setNewsItems(newsItems);
         listRssNewsAdapter.setIsDelete(false);
+        cbCheckAll.setChecked(false);
+        listRssNewsAdapter.setIsCheckAll(false);
         isDeleMode = false;
     }
 
     @OnClick(R.id.btRecycleBin)
-    public void onBtRecycleBinClick(){
+    public void onBtRecycleBinClick() {
         isDeleMode = true;
         listRssNewsAdapter.setIsDelete(true);
-        setUpButton(this.getView(), new int[]{R.id.btCheck,R.id.btClose}, new int[]{R.id.btBack, R.id.btSearch, R.id.btRecycleBin});
+        setUpButton(this.getView(), new int[]{R.id.btCheck, R.id.btClose, R.id.cbCheckAll}, new int[]{R.id.btBack, R.id.btSearch, R.id.btRecycleBin});
     }
 
     @TargetApi(Build.VERSION_CODES.N)
     @RequiresApi(api = Build.VERSION_CODES.N)
     @OnClick(R.id.btCheck)
-    public void onAcceptDelete(){
-        DataManager.deleteFromList(BOOKMARK_LIST,getActivity());
-        setUpButton(this.getView(), new int[]{R.id.btBack, R.id.btSearch, R.id.btRecycleBin}, new int[]{R.id.btCheck,R.id.btClose});
-        refreshView();
+    public void onAcceptDelete() {
+        DataManager.deleteFromList(BOOKMARK_LIST, getActivity());
+        refreshView(getActivity());
     }
 
     @OnClick(R.id.btClose)
-    public void onCloseClick(){
+    public void onCloseClick() {
         DataManager.resetDelete();
         listRssNewsAdapter.setIsDelete(false);
         isDeleMode = false;
-        setUpButton(this.getView(), new int[]{R.id.btBack, R.id.btSearch, R.id.btRecycleBin}, new int[]{R.id.btCheck,R.id.btClose});
+        cbCheckAll.setChecked(false);
+        setUpButton(this.getView(), new int[]{R.id.btBack, R.id.btSearch, R.id.btRecycleBin}, new int[]{R.id.btCheck, R.id.btClose, R.id.cbCheckAll});
+    }
+
+    @BindView(R.id.cbCheckAll)
+    CheckBox cbCheckAll;
+
+    @OnCheckedChanged(R.id.cbCheckAll)
+    public void onChangeCheckAll() {
+        if (cbCheckAll.isChecked()) {
+            listRssNewsAdapter.setIsCheckAll(true);
+        } else {
+            listRssNewsAdapter.setIsCheckAll(false);
+        }
     }
 }

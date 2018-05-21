@@ -34,6 +34,7 @@ public class ListRssNewsAdapter extends RecyclerView.Adapter<ListRssNewsAdapter.
     private List<NewsItem> newsItems = new ArrayList<>();
     private boolean isBookmarkable = true;
     private boolean isDelete = false;
+    private boolean isCheckAll = false;
 
     public ListRssNewsAdapter() {
     }
@@ -43,7 +44,18 @@ public class ListRssNewsAdapter extends RecyclerView.Adapter<ListRssNewsAdapter.
         notifyDataSetChanged();
     }
 
-    public interface onClickItemListener{
+    public void setIsCheckAll(boolean isCheckAll) {
+        this.isCheckAll = isCheckAll;
+        if (isCheckAll) {
+            DataManager.listDelete.clear();
+            for (int i = 0; i < newsItems.size(); i++) {
+                DataManager.listDelete.add(i);
+            }
+        }
+        notifyDataSetChanged();
+    }
+
+    public interface onClickItemListener {
         void onClickItem(int position);
     }
 
@@ -53,13 +65,11 @@ public class ListRssNewsAdapter extends RecyclerView.Adapter<ListRssNewsAdapter.
         this.onClickItemListener = onClickItemListener;
     }
 
-    public List<NewsItem> getNewsItems() {
-        return newsItems;
-    }
-
     public void setNewsItems(List<NewsItem> newsItems) {
-        this.newsItems = newsItems;
+        this.newsItems.clear();
+        this.newsItems.addAll(newsItems);
         notifyDataSetChanged();
+        Log.e("setNewsItems: ", " item");
     }
 
     public boolean isBookmarkable() {
@@ -86,12 +96,9 @@ public class ListRssNewsAdapter extends RecyclerView.Adapter<ListRssNewsAdapter.
         return newsItems.size();
     }
 
-    public void onRecycleBinClick(){
+    class ChildHolder extends BaseHolder {
 
-    }
-
-    class ChildHolder extends BaseHolder{
-
+        private final String TAG = ChildHolder.class.getSimpleName();
         @BindView(R.id.tvTitle)
         TextView tvTitle;
         @BindView(R.id.imv)
@@ -117,7 +124,8 @@ public class ListRssNewsAdapter extends RecyclerView.Adapter<ListRssNewsAdapter.
             tvTime.setText(Helper.changeDateToString(newsItems.get(position).time));
             tvDescription.setText(newsItems.get(position).des);
             isBookmarked = DataManager.isBookmarked(newsItems.get(position).link);
-            if(isBookmarked){
+            Log.e(TAG, "onBindingData");
+            if (isBookmarked) {
                 GlideApp.with(itemView.getContext()).load(R.drawable.ic_bookmark_selected).into(imvBookmark);
             } else {
                 GlideApp.with(itemView.getContext()).load(R.drawable.ic_bookmark_unselected).into(imvBookmark);
@@ -125,37 +133,53 @@ public class ListRssNewsAdapter extends RecyclerView.Adapter<ListRssNewsAdapter.
             GlideApp.with(itemView.getContext()).load(newsItems.get(position).getImageLink())
                     .placeholder(R.drawable.img_error)
                     .into(imageView);
-            if(!isBookmarkable){
+            if (!isBookmarkable) {
                 imvBookmark.setVisibility(View.GONE);
             }
-            checkBox.setChecked(false);
-            if(isDelete){
+            if (isDelete) {
                 checkBox.setVisibility(View.VISIBLE);
             } else {
                 checkBox.setVisibility(View.GONE);
             }
+            if (isCheckAll) {
+                if(!checkBox.isChecked()) {
+                    checkBox.setChecked(true);
+                }
+            } else {
+                if(checkBox.isChecked()) {
+                    checkBox.setChecked(false);
+                }
+            }
         }
 
         @OnClick(R.id.imvBookmark)
-        public void onImvBookmarkClick(){
-            if(!isBookmarked) {
-                DataManager.addItem(DataManager.BOOKMARK_LIST, (Activity) Objects.requireNonNull(itemView.getContext()),newsItems.get(getAdapterPosition()));
+        public void onImvBookmarkClick() {
+            if (!isBookmarked) {
+                DataManager.addItem(DataManager.BOOKMARK_LIST, (Activity) Objects.requireNonNull(itemView.getContext()), newsItems.get(getAdapterPosition()));
                 GlideApp.with(itemView.getContext()).load(R.drawable.ic_bookmark_selected).into(imvBookmark);
+                isBookmarked = true;
             }
         }
 
         @OnCheckedChanged(R.id.checkBox)
-        public void onCheckedCheckBoxChange(){
-            if(checkBox.isChecked()) {
-                DataManager.addItemDelete(getAdapterPosition());
+        public void onCheckedCheckBoxChange() {
+            if (isCheckAll) {
+                if (!checkBox.isChecked()) {
+                    DataManager.removeItemDelete(getAdapterPosition());
+                    isCheckAll = false;
+                }
             } else {
-                DataManager.removeItemDelete(getAdapterPosition());
+                if (checkBox.isChecked()) {
+                    DataManager.addItemDelete(getAdapterPosition());
+                } else {
+                    DataManager.removeItemDelete(getAdapterPosition());
+                }
             }
         }
 
         public void deleteBookMark() {
-            if(isBookmarked) {
-                DataManager.deleteData(DataManager.BOOKMARK_LIST, (Activity) Objects.requireNonNull(itemView.getContext()), getAdapterPosition());
+            if (isBookmarked) {
+                DataManager.deleteData(DataManager.BOOKMARK_LIST, (Activity) Objects.requireNonNull(itemView.getContext()), newsItems.get(getAdapterPosition()));
             }
         }
 

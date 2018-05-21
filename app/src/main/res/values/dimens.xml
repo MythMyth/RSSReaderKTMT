@@ -7,6 +7,7 @@
     <dimen name="text_size_normal">14sp</dimen>
     <dimen name="padding_small">3sp</dimen>
     <dimen name="padding_normal">5dp</dimen>
+    <dimen name="padding_big">10dp</dimen>
     <dimen name="padding_large">10dp</dimen>
     <dimen name="evelation_small">3dp</dimen>
     <dimen name="corner_small">4dp</dimen>

@@ -16,4 +16,5 @@
     <color name="text_blue">#3E1CB1</color>
     <color name="text_gray">#6C6C6C</color>
     <color name="white_gray">#F2EFEF</color>
+    <color name="backgroundProgressBar">#000000</color>
 </resources>

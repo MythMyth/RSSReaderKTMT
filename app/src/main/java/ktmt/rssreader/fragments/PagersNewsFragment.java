@@ -2,10 +2,15 @@ package ktmt.rssreader.fragments;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 
+import com.squareup.otto.Subscribe;
+
 import butterknife.BindView;
+import ktmt.rssreader.AppAction;
+import ktmt.rssreader.AppConstant;
 import ktmt.rssreader.Data.Link;
 import ktmt.rssreader.R;
 import ktmt.rssreader.adapters.ListTitlePagerAdapter;
@@ -51,7 +56,15 @@ public class PagersNewsFragment extends BaseFragment {
     }
 
     @Override
+    public void refreshView(FragmentActivity activity) {
+        AppAction appAction = AppAction.REFRESH;
+        appAction.setData(viewPager.getCurrentItem());
+        AppConstant.getBus().post(appAction);
+    }
+
+    @Override
     public boolean isKeepFragment() {
         return true;
     }
+
 }

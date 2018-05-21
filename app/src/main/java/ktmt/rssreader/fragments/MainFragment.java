@@ -1,7 +1,10 @@
 package ktmt.rssreader.fragments;
 
+import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 
 import com.roughike.bottombar.BottomBar;
@@ -10,8 +13,14 @@ import com.roughike.bottombar.OnTabSelectListener;
 import java.util.Objects;
 
 import butterknife.BindView;
+import ktmt.rssreader.AppAction;
+import ktmt.rssreader.AppConstant;
 import ktmt.rssreader.R;
 import ktmt.rssreader.adapters.HomePagerAdapter;
+
+import static android.support.v4.view.ViewPager.SCROLL_STATE_DRAGGING;
+import static android.support.v4.view.ViewPager.SCROLL_STATE_IDLE;
+import static android.support.v4.view.ViewPager.SCROLL_STATE_SETTLING;
 
 public class MainFragment extends BaseFragment implements OnTabSelectListener {
 
@@ -21,7 +30,9 @@ public class MainFragment extends BaseFragment implements OnTabSelectListener {
     BottomBar bottomBar;
     private int currentTab = 2;
 
-    public static MainFragment newInstance(){
+    private HomePagerAdapter homePagerAdapter;
+
+    public static MainFragment newInstance() {
         Bundle args = new Bundle();
         MainFragment fragment = new MainFragment();
         fragment.setArguments(args);
@@ -43,7 +54,10 @@ public class MainFragment extends BaseFragment implements OnTabSelectListener {
     }
 
     private void setupPager() {
-        viewPager.setAdapter(new HomePagerAdapter(getChildFragmentManager()));
+        if (homePagerAdapter == null) {
+            homePagerAdapter = new HomePagerAdapter(getChildFragmentManager());
+        }
+        viewPager.setAdapter(homePagerAdapter);
         viewPager.postDelayed(new Runnable() {
 
             @Override
@@ -56,19 +70,16 @@ public class MainFragment extends BaseFragment implements OnTabSelectListener {
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
             }
 
             @Override
             public void onPageSelected(int position) {
                 bottomBar.selectTabAtPosition(position);
-                ((BaseFragment)((HomePagerAdapter) Objects.requireNonNull(viewPager.getAdapter()))
-                        .getItem(position)).refreshView();
+                ((BaseFragment)homePagerAdapter.getItem(position)).refreshView(getActivity());
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
             }
         });
     }
@@ -76,7 +87,8 @@ public class MainFragment extends BaseFragment implements OnTabSelectListener {
 
     @Override
     public void onTabSelected(int tabId) {
-        switch (tabId){
+        haveProgressBar(true);
+        switch (tabId) {
             case R.id.tab_search:
                 currentTab = 0;
                 break;
@@ -93,7 +105,10 @@ public class MainFragment extends BaseFragment implements OnTabSelectListener {
                 currentTab = 3;
                 break;
         }
-        viewPager.setCurrentItem(currentTab, false);
+        if (viewPager.getCurrentItem() != currentTab) {
+            viewPager.setCurrentItem(currentTab, true);
+        }
+        haveProgressBar(false);
 //        updateTitle();
     }
 

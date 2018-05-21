@@ -2,16 +2,13 @@ package ktmt.rssreader.fragments;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import ktmt.rssreader.Data.Link;
-import ktmt.rssreader.adapters.ListTitlePagerAdapter;
 import ktmt.rssreader.R;
 
 import static ktmt.rssreader.Data.Link.ID_24H;
@@ -41,7 +38,19 @@ public class HomeFragment extends BaseFragment {
 
     @Override
     void initView(View view) {
+        Log.e("initView: ","home" );
         onBt24hClick();
+    }
+
+    @Override
+    void onViewAppear() {
+        Log.e("onViewAppear: ","home" );
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.e("onResume: ", "home");
     }
 
     @OnClick(R.id.btVnxpress)
@@ -71,6 +80,11 @@ public class HomeFragment extends BaseFragment {
                 .beginTransaction()
                 .replace(R.id.containerHome, pagersNewsFragment, null)
                 .commitAllowingStateLoss();
+    }
+
+    @Override
+    public void refreshView(FragmentActivity activity) {
+        pagersNewsFragment.refreshView(activity);
     }
 
     @Override
